@@ -1,51 +1,63 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
+window.onerror = function(message, url, linenumber) {
+  alert("JavaScript error: " + message + " on line " + linenumber + " for " + url);
+  console.log("JavaScript error: " + message + " on line " + linenumber + " for " + url);
 };
+var app = {
+  // Application Constructor
+  initialize: function() {
+    this.localFileName =  'vector.mbtiles';
+    this.remoteFile =  'https://dl.dropbox.com/u/2324263/vector.mbtiles';
 
-app.initialize();
+    this.bindEvents();
+  },
+  // Bind Event Listeners
+  //
+  // Bind any events that are required on startup. Common events are:
+  // 'load', 'deviceready', 'offline', and 'online'.
+  bindEvents: function() {
+    var _this = this;
+    document.addEventListener('deviceready', function() {
+      _this.onDeviceReady();
+    }, false);
+  },
+  // deviceready Event Handler
+  //
+  // The scope of 'this' is the event. In order to call the 'receivedEvent'
+  // function, we must explicity call 'app.receivedEvent(...);'
+  onDeviceReady: function() {
+    var _this = this;
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+      fs = fileSystem;
+
+      var file = fs.root.getFile(_this.localFileName, {create: false}, function () {
+        _this.buildMap();
+      }, function () {
+        console.log('Downloading file...');
+
+        ft = new FileTransfer();
+        ft.download(_this.remoteFile, fs.root.fullPath + '/' + _this.localFileName, function (entry) {
+          _this.buildMap();
+        }, function (error) {
+          alert('GError');
+          console.log(error);
+        });
+      });
+    });
+  },
+
+  buildMap: function() {
+    var db = window.sqlitePlugin.openDatabase(this.localFileName, "1.0", "Tiles", 2000000);
+
+    this.map = new L.Map('map', {
+      center: new L.LatLng(24.2870, 54.3274),
+        zoom: 10
+    });
+
+    tileLayer = new L.TileLayer.MBTiles(db, {
+      tms: true
+    }).addTo(this.map);
+
+    //var polygonDraw = new L.Polygon.Draw(map, {});
+    //polygonDraw.enable();
+  }
+};

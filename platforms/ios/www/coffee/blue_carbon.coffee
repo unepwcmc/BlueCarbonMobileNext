@@ -22,8 +22,8 @@ class BlueCarbon.App
   # Application Constructor
   constructor: (options)->
 
-    @on('mapReady', =>
-      @controller = new BlueCarbon.Controller(app:@)
+    @on('mapReady', (offlineLayer) =>
+      @controller = new BlueCarbon.Controller(app:@, offlineLayer: offlineLayer)
     )
 
     # Show logged in details
@@ -102,7 +102,8 @@ class BlueCarbon.App
 
   addBaseLayer: (offlineLayer) ->
     offlineLayer.addTo(@map)
+    window.theMap = @map
 
     @map.addControl(new L.Control.OfflineLayer(offlineLayer))
 
-    @trigger('mapReady')
+    @trigger('mapReady', offlineLayer)

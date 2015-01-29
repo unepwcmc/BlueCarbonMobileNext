@@ -1,6 +1,7 @@
 class BlueCarbon.Controller extends Wcmc.Controller
   constructor: (options)->
     @app = options.app
+    @offlineLayer = options.offlineLayer
     @sidePanel = new Backbone.ViewManager('#side-panel')
     @modal = new Backbone.ViewManager('#modal-container')
 
@@ -27,7 +28,7 @@ class BlueCarbon.Controller extends Wcmc.Controller
     )
 
   areaIndex: =>
-    areaIndexView = new BlueCarbon.Views.AreaIndexView(map: @app.map)
+    areaIndexView = new BlueCarbon.Views.AreaIndexView(map: @app.map, offlineLayer: @offlineLayer)
     @sidePanel.showView(areaIndexView)
 
     @transitionToActionOn(BlueCarbon.bus, 'area:startTrip', @areaEdit)

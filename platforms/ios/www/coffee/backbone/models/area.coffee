@@ -5,25 +5,52 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
   schema: ->
     "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)"
 
-  downloadData: ->
-    @pendingDownloads = []
-    for layer in @get('mbtiles')
-      ft = new FileTransfer()
+  downloadLayer: (layer, callback) =>
+    @pendingDownloads.push layer.habitat
 
-      boundSuccess = (() =>
-        _layer = layer
-        return (fileEntry)=>
-          @layerDownloaded(_layer, fileEntry)
-      )()
-      boundError = (() =>
-        _layer = layer
-        return (error) =>
-          alert "unable to download #{_layer.habitat}"
-          @pendingDownloads.splice(@pendingDownloads.indexOf(layer.habitat), 1)
-          console.log error
-      )()
-      @pendingDownloads.push layer.habitat
-      ft.download layer.url, @filenameForLayer(layer), boundSuccess, boundError
+    boundSuccess = (() =>
+      _layer = layer
+      return (fileEntry)=>
+        @layerDownloaded(_layer, fileEntry)
+        callback()
+    )()
+    boundError = (() =>
+      _layer = layer
+      return (error) =>
+        console.log "unable to download #{_layer.habitat}"
+        @pendingDownloads.splice(@pendingDownloads.indexOf(layer.habitat), 1)
+        console.log error
+        callback(error)
+    )()
+
+    ft = new FileTransfer()
+    ft.download layer.url, @filenameForLayer(layer), boundSuccess, boundError
+
+  downloadData: (@offlineLayer, callback) =>
+    @pendingDownloads = []
+    async.parallel([@downloadLayers, @downloadTiles], callback)
+
+  downloadLayers: (callback) =>
+    async.map(@get('mbtiles'), @downloadLayer, callback)
+
+  downloadTiles: (callback) =>
+    @offlineLayer.saveTiles(17,
+        () =>
+          @downloadingTiles = true
+        ,
+        () =>
+          @downloadingTiles = false
+          alert 'Saved cache'
+          callback()
+        ,
+        (error) =>
+          @downloadingTiles = false
+          console.log(error)
+          alert 'Could not save cache'
+          callback(error)
+      )
+
+
 
   filenameForLayer: (layer, absolute=true) ->
     name = ""
@@ -44,7 +71,7 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
     @localSave()
 
   downloadState: () ->
-    return "downloading" if @pendingDownloads? and @pendingDownloads.length > 0
+    return "downloading" if (@pendingDownloads?.length > 0 or @downloadingTiles)
     for layer in @get('mbtiles')
       if layer.status == 'pending' || layer.status == 'generating'
         return 'data generating'

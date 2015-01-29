@@ -10,6 +10,7 @@ class BlueCarbon.Views.AreaIndexView extends Backbone.View
 
   initialize: (options) ->
     @map = options.map
+    @offlineLayer = options.offlineLayer
     @areaList = new BlueCarbon.Collections.Areas()
     @areaList.on('reset', @render)
     @sync()
@@ -20,7 +21,7 @@ class BlueCarbon.Views.AreaIndexView extends Backbone.View
     @$el.html(@template(models:@areaList.toJSON()))
     @closeSubViews()
     @areaList.each (area)=>
-      areaView = new BlueCarbon.Views.AreaView(area:area, map: @map)
+      areaView = new BlueCarbon.Views.AreaView(area:area, map: @map, offlineLayer: @offlineLayer)
       $('#area-list').append(areaView.render().el)
       @subViews.push areaView
     return @
@@ -64,10 +65,12 @@ class BlueCarbon.Views.AreaView extends Backbone.View
 
   initialize: (options)->
     @area = options.area
+    @offlineLayer = options.offlineLayer
     @area.on('sync', @render)
     @map = options.map
 
   render: =>
+    console.log "calling render"
     @$el.html(@template(area:@area))
     @map.removeLayer(@mapPolygon) if @mapPolygon?
     @mapPolygon = new L.Polygon(@area.coordsAsLatLngArray(),
@@ -84,8 +87,12 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     BlueCarbon.bus.trigger('area:startTrip', area: @area)
 
   downloadData: =>
-    @area.downloadData()
-    @render()
+    @zoomToBounds()
+    @map.once('moveend', =>
+      @area.downloadData(@offlineLayer, =>
+        @render()
+      )
+    )
 
   zoomToBounds: =>
     bounds = @area.coordsAsLatLngArray()

@@ -36,9 +36,10 @@
     function App(options) {
       this.start = __bind(this.start, this);
       this.on('mapReady', (function(_this) {
-        return function() {
+        return function(offlineLayer) {
           return _this.controller = new BlueCarbon.Controller({
-            app: _this
+            app: _this,
+            offlineLayer: offlineLayer
           });
         };
       })(this));
@@ -127,7 +128,7 @@
     App.prototype.addBaseLayer = function(offlineLayer) {
       offlineLayer.addTo(this.map);
       this.map.addControl(new L.Control.OfflineLayer(offlineLayer));
-      return this.trigger('mapReady');
+      return this.trigger('mapReady', offlineLayer);
     };
 
     return App;

@@ -27,6 +27,7 @@
 
     AreaIndexView.prototype.initialize = function(options) {
       this.map = options.map;
+      this.offlineLayer = options.offlineLayer;
       this.areaList = new BlueCarbon.Collections.Areas();
       this.areaList.on('reset', this.render);
       this.sync();
@@ -43,7 +44,8 @@
           var areaView;
           areaView = new BlueCarbon.Views.AreaView({
             area: area,
-            map: _this.map
+            map: _this.map,
+            offlineLayer: _this.offlineLayer
           });
           $('#area-list').append(areaView.render().el);
           return _this.subViews.push(areaView);
@@ -126,11 +128,13 @@
 
     AreaView.prototype.initialize = function(options) {
       this.area = options.area;
+      this.offlineLayer = options.offlineLayer;
       this.area.on('sync', this.render);
       return this.map = options.map;
     };
 
     AreaView.prototype.render = function() {
+      console.log("calling render");
       this.$el.html(this.template({
         area: this.area
       }));
@@ -154,8 +158,14 @@
     };
 
     AreaView.prototype.downloadData = function() {
-      this.area.downloadData();
-      return this.render();
+      this.zoomToBounds();
+      return this.map.once('moveend', (function(_this) {
+        return function() {
+          return _this.area.downloadData(_this.offlineLayer, function() {
+            return _this.render();
+          });
+        };
+      })(this));
     };
 
     AreaView.prototype.zoomToBounds = function() {

@@ -13,6 +13,7 @@
       this.areaIndex = __bind(this.areaIndex, this);
       this.loginUser = __bind(this.loginUser, this);
       this.app = options.app;
+      this.offlineLayer = options.offlineLayer;
       this.sidePanel = new Backbone.ViewManager('#side-panel');
       this.modal = new Backbone.ViewManager('#modal-container');
       this.loginUser();
@@ -49,7 +50,8 @@
     Controller.prototype.areaIndex = function() {
       var areaIndexView;
       areaIndexView = new BlueCarbon.Views.AreaIndexView({
-        map: this.app.map
+        map: this.app.map,
+        offlineLayer: this.offlineLayer
       });
       this.sidePanel.showView(areaIndexView);
       return this.transitionToActionOn(BlueCarbon.bus, 'area:startTrip', this.areaEdit);

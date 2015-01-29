@@ -14,6 +14,10 @@
 
     function Area() {
       this.layerDownloaded = __bind(this.layerDownloaded, this);
+      this.downloadTiles = __bind(this.downloadTiles, this);
+      this.downloadLayers = __bind(this.downloadLayers, this);
+      this.downloadData = __bind(this.downloadData, this);
+      this.downloadLayer = __bind(this.downloadLayer, this);
       return Area.__super__.constructor.apply(this, arguments);
     }
 
@@ -21,38 +25,64 @@
       return "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)";
     };
 
-    Area.prototype.downloadData = function() {
-      var boundError, boundSuccess, ft, layer, _i, _len, _ref, _results;
+    Area.prototype.downloadLayer = function(layer, callback) {
+      var boundError, boundSuccess, ft;
+      this.pendingDownloads.push(layer.habitat);
+      boundSuccess = ((function(_this) {
+        return function() {
+          var _layer;
+          _layer = layer;
+          return function(fileEntry) {
+            _this.layerDownloaded(_layer, fileEntry);
+            return callback();
+          };
+        };
+      })(this))();
+      boundError = ((function(_this) {
+        return function() {
+          var _layer;
+          _layer = layer;
+          return function(error) {
+            console.log("unable to download " + _layer.habitat);
+            _this.pendingDownloads.splice(_this.pendingDownloads.indexOf(layer.habitat), 1);
+            console.log(error);
+            return callback(error);
+          };
+        };
+      })(this))();
+      ft = new FileTransfer();
+      return ft.download(layer.url, this.filenameForLayer(layer), boundSuccess, boundError);
+    };
+
+    Area.prototype.downloadData = function(offlineLayer, callback) {
+      this.offlineLayer = offlineLayer;
       this.pendingDownloads = [];
-      _ref = this.get('mbtiles');
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        layer = _ref[_i];
-        ft = new FileTransfer();
-        boundSuccess = ((function(_this) {
-          return function() {
-            var _layer;
-            _layer = layer;
-            return function(fileEntry) {
-              return _this.layerDownloaded(_layer, fileEntry);
-            };
-          };
-        })(this))();
-        boundError = ((function(_this) {
-          return function() {
-            var _layer;
-            _layer = layer;
-            return function(error) {
-              alert("unable to download " + _layer.habitat);
-              _this.pendingDownloads.splice(_this.pendingDownloads.indexOf(layer.habitat), 1);
-              return console.log(error);
-            };
-          };
-        })(this))();
-        this.pendingDownloads.push(layer.habitat);
-        _results.push(ft.download(layer.url, this.filenameForLayer(layer), boundSuccess, boundError));
-      }
-      return _results;
+      return async.parallel([this.downloadLayers, this.downloadTiles], callback);
+    };
+
+    Area.prototype.downloadLayers = function(callback) {
+      return async.map(this.get('mbtiles'), this.downloadLayer, callback);
+    };
+
+    Area.prototype.downloadTiles = function(callback) {
+      return this.offlineLayer.saveTiles(17, (function(_this) {
+        return function() {
+          return _this.downloadingTiles = true;
+        };
+      })(this), (function(_this) {
+        return function() {
+          _this.downloadingTiles = false;
+          alert('Saved cache');
+          return callback();
+        };
+      })(this), (function(_this) {
+        return function(error) {
+          _this.downloadingTiles = false;
+          console.log(error);
+          alert('Could not save cache');
+          return callback(error);
+        };
+      })(this));
     };
 
     Area.prototype.filenameForLayer = function(layer, absolute) {
@@ -85,13 +115,13 @@
     };
 
     Area.prototype.downloadState = function() {
-      var layer, _i, _len, _ref;
-      if ((this.pendingDownloads != null) && this.pendingDownloads.length > 0) {
+      var layer, _i, _len, _ref, _ref1;
+      if (((_ref = this.pendingDownloads) != null ? _ref.length : void 0) > 0 || this.downloadingTiles) {
         return "downloading";
       }
-      _ref = this.get('mbtiles');
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        layer = _ref[_i];
+      _ref1 = this.get('mbtiles');
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        layer = _ref1[_i];
         if (layer.status === 'pending' || layer.status === 'generating') {
           return 'data generating';
         }

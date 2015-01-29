@@ -19,9 +19,11 @@ class BlueCarbon.Views.LoginView extends Backbone.View
       success: (data)=>
         $('#login-form .loading-spinner').hide()
         @model.trigger('user:loggedIn', @model)
+        $(window).scrollTop(0)
       error: (data)=>
         $('#login-form .loading-spinner').hide()
         @showError('Unable to login')
+        $(window).scrollTop(0)
     )
 
   render: ->

@@ -35,13 +35,15 @@
         success: (function(_this) {
           return function(data) {
             $('#login-form .loading-spinner').hide();
-            return _this.model.trigger('user:loggedIn', _this.model);
+            _this.model.trigger('user:loggedIn', _this.model);
+            return $(window).scrollTop(0);
           };
         })(this),
         error: (function(_this) {
           return function(data) {
             $('#login-form .loading-spinner').hide();
-            return _this.showError('Unable to login');
+            _this.showError('Unable to login');
+            return $(window).scrollTop(0);
           };
         })(this)
       });

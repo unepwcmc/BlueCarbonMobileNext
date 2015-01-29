@@ -79,16 +79,30 @@ class BlueCarbon.App
       zoom: 10
       doubleClickZoom: false
     )
-    @addBaseLayer()
 
+    @createBaseLayer()
+    @addControls()
+
+  addControls: (offlineLayer) ->
     @map.addControl(new L.Control.ShowLocation())
     L.control.scale().addTo(@map)
 
-
-  addBaseLayer: ->
+  createBaseLayer: ->
     tileLayerUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-    tileLayer = new L.TileLayer(tileLayerUrl, {
-      maxZoom: 18
-    }).addTo(@map)
+
+    options =
+      maxZoom: 18,
+      subDomains: ['otile1','otile2','otile3','otile4'],
+      storeName:"offlineTileStore",
+      dbOption:"WebSQL",
+      onReady: ( => @addBaseLayer(offlineLayer) ),
+      onError: ->
+
+    offlineLayer = new OfflineLayer(tileLayerUrl, options)
+
+  addBaseLayer: (offlineLayer) ->
+    offlineLayer.addTo(@map)
+
+    @map.addControl(new L.Control.OfflineLayer(offlineLayer))
 
     @trigger('mapReady')

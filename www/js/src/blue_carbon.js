@@ -97,17 +97,36 @@
         zoom: 10,
         doubleClickZoom: false
       });
-      this.addBaseLayer();
+      this.createBaseLayer();
+      return this.addControls();
+    };
+
+    App.prototype.addControls = function(offlineLayer) {
       this.map.addControl(new L.Control.ShowLocation());
       return L.control.scale().addTo(this.map);
     };
 
-    App.prototype.addBaseLayer = function() {
-      var tileLayer, tileLayerUrl;
+    App.prototype.createBaseLayer = function() {
+      var offlineLayer, options, tileLayerUrl;
       tileLayerUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-      tileLayer = new L.TileLayer(tileLayerUrl, {
-        maxZoom: 18
-      }).addTo(this.map);
+      options = {
+        maxZoom: 18,
+        subDomains: ['otile1', 'otile2', 'otile3', 'otile4'],
+        storeName: "offlineTileStore",
+        dbOption: "WebSQL",
+        onReady: ((function(_this) {
+          return function() {
+            return _this.addBaseLayer(offlineLayer);
+          };
+        })(this)),
+        onError: function() {}
+      };
+      return offlineLayer = new OfflineLayer(tileLayerUrl, options);
+    };
+
+    App.prototype.addBaseLayer = function(offlineLayer) {
+      offlineLayer.addTo(this.map);
+      this.map.addControl(new L.Control.OfflineLayer(offlineLayer));
       return this.trigger('mapReady');
     };
 

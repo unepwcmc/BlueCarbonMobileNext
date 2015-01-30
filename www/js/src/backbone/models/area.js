@@ -85,19 +85,6 @@
       })(this));
     };
 
-    Area.prototype.filenameForLayer = function(layer, absolute) {
-      var name;
-      if (absolute == null) {
-        absolute = true;
-      }
-      name = "";
-      if (absolute) {
-        name += "" + cordova.file.documentsDirectory;
-      }
-      name += (this.get('id')) + "-" + layer.habitat + ".mbtiles";
-      return name;
-    };
-
     Area.prototype.layerDownloaded = function(layer, fileEntry) {
       var index, mbTiles, storedLayer, _i, _len;
       console.log("downloaded " + layer.habitat);

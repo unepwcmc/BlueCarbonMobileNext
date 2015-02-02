@@ -37,7 +37,7 @@ class BlueCarbon.Views.ValidationView extends Backbone.View
       @$el.find('.validation-details').slideDown()
       @showHighlightPolygon()
       @detailsVisible = true
-  
+
   hideDetails: =>
     if @detailsVisible
       @$el.find('.validation-details').slideUp()

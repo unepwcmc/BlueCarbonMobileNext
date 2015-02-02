@@ -28,7 +28,9 @@
         return;
       }
       this.removeLayerControl(map);
-      this.layerControl = L.control.layers([], this.tileLayers);
+      this.layerControl = L.control.layers([], this.tileLayers, {
+        position: 'bottomright'
+      });
       return this.layerControl.addTo(map);
     },
     removeTileLayers: function(map) {

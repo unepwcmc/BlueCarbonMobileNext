@@ -96,7 +96,8 @@
       this.map = new L.Map("map", {
         center: new L.LatLng(24.2870, 54.3274),
         zoom: 10,
-        doubleClickZoom: false
+        doubleClickZoom: false,
+        attributionControl: false
       });
       this.createBaseLayer();
       return this.addControls();

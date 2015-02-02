@@ -20,7 +20,7 @@ BlueCarbon.Mixins.AreaMapLayers =
 
     @removeLayerControl(map)
 
-    @layerControl = L.control.layers([], @tileLayers)
+    @layerControl = L.control.layers([], @tileLayers, position: 'bottomright')
     @layerControl.addTo(map)
 
   removeTileLayers: (map)->

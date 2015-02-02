@@ -140,19 +140,7 @@ h3 {
 
 #main-container {
   background: url('img/mottled.png');
-}
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
-  /* For portrait layouts only */
-  #main-container {
-    height: 914px;
-  }
-}
-
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
-  /* For landscape layouts only */
-  #main-container {
-    height: 658px;
-  }
+  height: 768px;
 }
 
 #side-panel-content-container {
@@ -596,12 +584,12 @@ ul.fields input{
 }
 
 .leaflet-control-layers {
-  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   border: 0 !important;
   padding: 0 !important;
   background-color: #1f2229;
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
   width: 185px;
 }
 
@@ -629,12 +617,12 @@ ul.fields input{
 .leaflet-control-layers-toggle {
   height: 27px !important;
   padding-left: 80%;
-  background-image: url(images/layer-control-arrow-down.png) !important;
+  background-image: url(images/layer-control-arrow-up@2x.png) !important;
 }
 
 .leaflet-control-layers-expanded .leaflet-control-layers-toggle {
   display: block;
-  background-image: url(images/layer-control-arrow-up.png) !important;
+  background-image: url(images/layer-control-arrow-down@2x.png) !important;
 }
 
 #validation-attributes textarea {

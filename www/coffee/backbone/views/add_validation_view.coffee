@@ -37,7 +37,7 @@ class BlueCarbon.Views.AddValidationView extends Backbone.View
     @addMapLayers(@area, @map)
     @addLayerControl(@map)
     return @
-  
+
   drawExistingValidations: =>
     @mapPolygons = []
     @validationList.each (validation) =>
@@ -58,7 +58,7 @@ class BlueCarbon.Views.AddValidationView extends Backbone.View
     if @mapPolygons?
       for poly in @mapPolygons
         @map.removeLayer(poly)
-  
+
   getDate: ->
     date = new Date()
     return "#{date.getFullYear()}-#{date.getMonth() + 1}-#{date.getDate()}"

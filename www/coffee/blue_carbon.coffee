@@ -78,6 +78,7 @@ class BlueCarbon.App
       center: new L.LatLng(24.2870, 54.3274)
       zoom: 10
       doubleClickZoom: false
+      attributionControl: false
     )
 
     @createBaseLayer()

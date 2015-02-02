@@ -23,3 +23,13 @@ class window.DownloadService
 
     ft = new FileTransfer()
     ft.download layer.url, @area.filenameForLayer(layer), success, callback
+
+  updateArea: (layer) ->
+    layer.downloadedAt = (new Date()).getTime()
+
+    mbTiles = @area.get('mbtiles')
+    for storedLayer, index in mbTiles
+      if storedLayer.habitat == layer.habitat
+        mbTiles[index] = layer
+    @area.set('mbtiles', mbTiles)
+    @area.localSave()

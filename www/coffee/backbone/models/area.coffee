@@ -5,18 +5,6 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
   schema: ->
     "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)"
 
-  layerDownloaded: (layer, fileEntry) =>
-    console.log "downloaded #{layer.habitat}"
-    @pendingDownloads.splice(@pendingDownloads.indexOf(layer.habitat), 1)
-
-    layer.downloadedAt = (new Date()).getTime()
-    mbTiles = @get('mbtiles')
-    for storedLayer, index in mbTiles
-      if storedLayer.habitat == layer.habitat
-        mbTiles[index] = layer
-    @set('mbtiles', mbTiles)
-    @localSave()
-
   downloadState: () ->
     return "downloading" if (@pendingDownloads?.length > 0 or @downloadingTiles)
     for layer in @get('mbtiles')

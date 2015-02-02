@@ -42,6 +42,20 @@
       return ft.download(layer.url, this.area.filenameForLayer(layer), success, callback);
     };
 
+    DownloadService.prototype.updateArea = function(layer) {
+      var index, mbTiles, storedLayer, _i, _len;
+      layer.downloadedAt = (new Date()).getTime();
+      mbTiles = this.area.get('mbtiles');
+      for (index = _i = 0, _len = mbTiles.length; _i < _len; index = ++_i) {
+        storedLayer = mbTiles[index];
+        if (storedLayer.habitat === layer.habitat) {
+          mbTiles[index] = layer;
+        }
+      }
+      this.area.set('mbtiles', mbTiles);
+      return this.area.localSave();
+    };
+
     return DownloadService;
 
   })();

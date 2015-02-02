@@ -114,14 +114,28 @@ h3 {
 }
 
 #user-area {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border-bottom-left-radius: 10px;
   background-color: #2A303E;
-  padding: 2px 7px;
+  padding: 15px;
   box-shadow: inset 3px -4px 12px -2px #333;
   font-size: 13px;
+  position: relative;
+}
+
+#user-area span {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 210px;
+}
+
+#user-area .btn {
+  height: 32px;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  box-sizing: border-box;
+  padding-top: 5px;
 }
 
 #main-container {
@@ -141,13 +155,18 @@ h3 {
   }
 }
 
+#side-panel-content-container {
+  height: 721px;
+}
+
 #side-panel {
   width: 30%;
   height: 100%;
   float:left;
-    color: #9a9da1;
-    background: #384658 url('img/sidepanel_bg.png') top left repeat-x;
+  color: #9a9da1;
+  background: #384658 url('img/sidepanel_bg.png') top left repeat-x;
 }
+
 #map {
   width: 716px;
   height: 100%;
@@ -162,7 +181,7 @@ h3 {
 }
 
 .login{
-    color: #95979b;
+  color: #95979b;
 }
 
 .login form{
@@ -211,11 +230,12 @@ ul.fields input{
   position:absolute;
   top: 0;
   left: 0;
-  height: 748px;
-  width: 1024px;
+  height: 768px;
+  width: 100%;
   background-color: rgba(0,0,0, 0.5);
   z-index: 1000;
 }
+
 #modal-disabler.active #modal-container {
   display:block;
   background-color: #2A303E;
@@ -231,14 +251,6 @@ ul.fields input{
   border: 1px solid #4F545E;
   border-radius: 10px;
   padding: 20px;
-}
-
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
-  /* portrait */
-  #modal-disabler.active {
-    height: 1004px;
-    width: 768px;
-  }
 }
 
 #login-form {

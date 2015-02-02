@@ -1,13 +1,19 @@
 window.BlueCarbon ||= {}
 window.BlueCarbon.Views ||= {}
 
+ENTER_KEY = 13
+
 class BlueCarbon.Views.LoginView extends Backbone.View
   template: JST['area/login']
   className: 'login'
   events:
     "click #login": "login"
+    "keydown #password": "login"
+    "keydown #username": "login"
 
-  login: =>
+  login: (event) =>
+    return if event.type is "keydown" and  event.which isnt ENTER_KEY
+
     if navigator.connection.type == Connection.NONE
       alert("You are currently offline, please connect to the internet to login")
       return false
@@ -18,6 +24,7 @@ class BlueCarbon.Views.LoginView extends Backbone.View
       $('#login-form').serializeObject(),
       success: (data)=>
         $('#login-form .loading-spinner').hide()
+        $('#login-form input').blur()
         @model.trigger('user:loggedIn', @model)
         $(window).scrollTop(0)
       error: (data)=>

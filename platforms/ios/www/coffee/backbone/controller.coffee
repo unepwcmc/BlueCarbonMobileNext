@@ -2,7 +2,7 @@ class BlueCarbon.Controller extends Wcmc.Controller
   constructor: (options)->
     @app = options.app
     @offlineLayer = options.offlineLayer
-    @sidePanel = new Backbone.ViewManager('#side-panel')
+    @sidePanel = new Backbone.ViewManager('#side-panel-content-container')
     @modal = new Backbone.ViewManager('#modal-container')
 
     @loginUser()

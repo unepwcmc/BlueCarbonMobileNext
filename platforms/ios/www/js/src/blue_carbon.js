@@ -45,7 +45,7 @@
       })(this));
       BlueCarbon.bus.on('user:loggedIn', (function(_this) {
         return function(user) {
-          $("#user-area").html((user.get('email')) + " <a id=\"logout-user\" class=\"btn btn-small\">Logout</a>");
+          $("#user-area").html((user.get('email')) + " <a id=\"logout-user\" class=\"btn btn-small\">Log Out</a>");
           return $('#logout-user').click(function() {
             var r;
             if (navigator.connection.type === Connection.NONE) {
@@ -127,7 +127,6 @@
 
     App.prototype.addBaseLayer = function(offlineLayer) {
       offlineLayer.addTo(this.map);
-      this.map.addControl(new L.Control.OfflineLayer(offlineLayer));
       return this.trigger('mapReady', offlineLayer);
     };
 

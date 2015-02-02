@@ -7,20 +7,23 @@
     <link rel="stylesheet" type="text/css" href="css/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="css/leaflet.draw.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+    <title>Blue Carbon</title>
   </head>
+
   <body>
-    <div id="header-strip">
-      <h1>The World of Blue Carbon</h1>
-      <div id="user-area"></div>
-    </div>
     <div id="main-container">
-      <div id="side-panel"></div>
+      <div id="side-panel">
+        <div id="side-panel-content-container">
+        </div>
+        <div id="user-area"></div>
+      </div>
       <div id="map"></div>
     </div>
+
     <div id="modal-disabler">
       <div id="modal-container"></div>
     </div>
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/lib/bluebird.min.js"></script>
     <script type="text/javascript" src="js/lib/async.js"></script>
@@ -55,12 +58,15 @@
     <script type="text/javascript" src="js/src/backbone/views/area_index_view.js"></script>
     <script type="text/javascript" src="js/src/backbone/views/login_view.js"></script>
     <script type="text/javascript" src="js/src/backbone/views/validation_view.js"></script>
+
     <script type="text/javascript">
       // Prevent user from being able to scroll in surrounding WebView
       $('body').on('touchmove', function(e) {
         e.preventDefault();
       });
+
       window.blueCarbonApp = new BlueCarbon.App({waitForRemoteConsole: false});
     </script>
+
   </body>
 </html>

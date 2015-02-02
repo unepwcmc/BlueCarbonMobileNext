@@ -14,7 +14,7 @@
       this.loginUser = __bind(this.loginUser, this);
       this.app = options.app;
       this.offlineLayer = options.offlineLayer;
-      this.sidePanel = new Backbone.ViewManager('#side-panel');
+      this.sidePanel = new Backbone.ViewManager('#side-panel-content-container');
       this.modal = new Backbone.ViewManager('#modal-container');
       this.loginUser();
     }

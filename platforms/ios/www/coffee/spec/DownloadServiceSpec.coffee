@@ -22,6 +22,7 @@ describe("DownloadService", ->
     beforeEach( ->
       @area = new BlueCarbon.Models.Area(id: 12)
       @service = new DownloadService(@area)
+      sinon.stub(@service, 'updateArea')
 
       @layer = {
         habitat: "seagrass"
@@ -75,7 +76,7 @@ describe("DownloadService", ->
       }
 
       area = new BlueCarbon.Models.Area(id: 12, mbtiles: layers)
-      sinon.stub(area, 'localSave')
+      saveStub = sinon.stub(area, 'localSave')
 
       sinon.stub(Date::, 'getTime', -> 1234567)
 
@@ -91,6 +92,7 @@ describe("DownloadService", ->
       }]
 
       expect(area.get('mbtiles')).toEqual(expectedLayers)
+      expect(saveStub.called).toBe(true)
     )
   )
 
@@ -106,6 +108,7 @@ describe("DownloadService", ->
 
       @area = new BlueCarbon.Models.Area(id: 12, mbtiles: @layers)
       @service = new DownloadService(@area)
+      sinon.stub(@service, 'updateArea')
 
       window.FileTransfer = ->
       FileTransfer:: = { download: (url, name, callback) -> callback() }

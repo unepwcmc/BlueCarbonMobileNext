@@ -29,7 +29,7 @@ class BlueCarbon.App
     # Show logged in details
     BlueCarbon.bus.on('user:loggedIn', (user) =>
       $("#user-area").html("""
-        #{user.get('email')} <a id="logout-user" class="btn btn-small">Logout</a>
+        #{user.get('email')} <a id="logout-user" class="btn btn-small">Log Out</a>
       """)
 
       $('#logout-user').click( =>
@@ -102,7 +102,4 @@ class BlueCarbon.App
 
   addBaseLayer: (offlineLayer) ->
     offlineLayer.addTo(@map)
-
-    @map.addControl(new L.Control.OfflineLayer(offlineLayer))
-
     @trigger('mapReady', offlineLayer)

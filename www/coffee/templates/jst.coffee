@@ -115,11 +115,11 @@ window.JST['area/login'] = _.template(
       <ul class="fields">
         <li>
           <label>Email</label>
-          <input name="email"/>
+          <input name="email" id="username">
         </li>
         <li>
           <label>Password</label>
-          <input name="password" type="password"/>
+          <input name="password" id="password" type="password">
         </li>
       </ul>
       <a id="login" class='btn'>Sign In</a> <img src="css/images/timer.gif" class="loading-spinner" />

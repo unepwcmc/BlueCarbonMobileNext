@@ -102,7 +102,6 @@ class BlueCarbon.App
 
   addBaseLayer: (offlineLayer) ->
     offlineLayer.addTo(@map)
-    window.theMap = @map
 
     @map.addControl(new L.Control.OfflineLayer(offlineLayer))
 

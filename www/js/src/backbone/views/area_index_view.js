@@ -161,8 +161,13 @@
       this.zoomToBounds();
       return this.map.once('moveend', (function(_this) {
         return function() {
-          return _this.area.downloadData(_this.offlineLayer, function() {
-            return _this.render();
+          var service;
+          service = new DownloadService(_this.area);
+          return service.downloadHabitats().then(function() {
+            return service.downloadBaseLayer(_this.offlineLayer);
+          }).then(function() {})["catch"](function(error) {
+            alert('Could not download the area');
+            return console.log(error);
           });
         };
       })(this));

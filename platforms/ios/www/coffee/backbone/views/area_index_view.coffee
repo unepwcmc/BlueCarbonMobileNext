@@ -89,8 +89,14 @@ class BlueCarbon.Views.AreaView extends Backbone.View
   downloadData: =>
     @zoomToBounds()
     @map.once('moveend', =>
-      @area.downloadData(@offlineLayer, =>
-        @render()
+      service = new DownloadService(@area)
+      service.downloadHabitats().then( =>
+        service.downloadBaseLayer(@offlineLayer)
+      ).then( ->
+        alert('HOLY SHIT IT WORKED')
+      ).catch( (error) ->
+        alert 'too bad'
+        console.log error
       )
     )
 

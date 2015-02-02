@@ -70,7 +70,6 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     @map = options.map
 
   render: =>
-    console.log "calling render"
     @$el.html(@template(area:@area))
     @map.removeLayer(@mapPolygon) if @mapPolygon?
     @mapPolygon = new L.Polygon(@area.coordsAsLatLngArray(),
@@ -87,21 +86,25 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     BlueCarbon.bus.trigger('area:startTrip', area: @area)
 
   downloadData: =>
-    @zoomToBounds()
-    @map.once('moveend', =>
-      service = new DownloadService(@area)
-      service.downloadHabitats().then( =>
-        service.downloadBaseLayer(@offlineLayer)
-      ).then( ->
-      ).catch( (error) ->
-        alert 'Could not download the area'
-        console.log error
-      )
+    service = new DownloadService(@area)
+
+    @zoomToBounds().then( =>
+      service.downloadHabitats()
+    ).then( =>
+      service.downloadBaseLayer(@offlineLayer)
+    ).then( ->
+      alert 'worky work worked'
+    ).catch( (error) ->
+      alert 'Could not download the area'
+      console.log error
     )
 
   zoomToBounds: =>
-    bounds = @area.coordsAsLatLngArray()
-    @map.fitBounds(bounds)
+    new Promise( (resolve, reject) =>
+      bounds = @area.coordsAsLatLngArray()
+      @map.fitBounds(bounds)
+      @map.once('moveend', resolve)
+    )
 
   onClose: ->
     @map.removeLayer(@mapPolygon)

@@ -134,7 +134,6 @@
     };
 
     AreaView.prototype.render = function() {
-      console.log("calling render");
       this.$el.html(this.template({
         area: this.area
       }));
@@ -158,25 +157,33 @@
     };
 
     AreaView.prototype.downloadData = function() {
-      this.zoomToBounds();
-      return this.map.once('moveend', (function(_this) {
+      var service;
+      service = new DownloadService(this.area);
+      return this.zoomToBounds().then((function(_this) {
         return function() {
-          var service;
-          service = new DownloadService(_this.area);
-          return service.downloadHabitats().then(function() {
-            return service.downloadBaseLayer(_this.offlineLayer);
-          }).then(function() {})["catch"](function(error) {
-            alert('Could not download the area');
-            return console.log(error);
-          });
+          return service.downloadHabitats();
         };
-      })(this));
+      })(this)).then((function(_this) {
+        return function() {
+          return service.downloadBaseLayer(_this.offlineLayer);
+        };
+      })(this)).then(function() {
+        return alert('worky work worked');
+      })["catch"](function(error) {
+        alert('Could not download the area');
+        return console.log(error);
+      });
     };
 
     AreaView.prototype.zoomToBounds = function() {
-      var bounds;
-      bounds = this.area.coordsAsLatLngArray();
-      return this.map.fitBounds(bounds);
+      return new Promise((function(_this) {
+        return function(resolve, reject) {
+          var bounds;
+          bounds = _this.area.coordsAsLatLngArray();
+          _this.map.fitBounds(bounds);
+          return _this.map.once('moveend', resolve);
+        };
+      })(this));
     };
 
     AreaView.prototype.onClose = function() {

@@ -539,18 +539,8 @@ ul.fields input{
 
 /* LeafletJS Style Overrides */
 
-.leaflet-div-icon-first {
-  border: 0;
-  background: transparent;
-  background-image: url(images/marker-ipad.png) !important;
-  width: 38px !important;
-  height: 38px !important;
-  top: -15px;
-  right: -15px;
-}
-
 .leaflet-control-zoom a:hover {
-	background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .leaflet-control-zoom a:active {
@@ -617,12 +607,12 @@ ul.fields input{
 .leaflet-control-layers-toggle {
   height: 27px !important;
   padding-left: 80%;
-  background-image: url(images/layer-control-arrow-up@2x.png) !important;
+  background-image: url(images/layer-control-arrow-up.png) !important;
 }
 
 .leaflet-control-layers-expanded .leaflet-control-layers-toggle {
   display: block;
-  background-image: url(images/layer-control-arrow-down@2x.png) !important;
+  background-image: url(images/layer-control-arrow-down.png) !important;
 }
 
 #validation-attributes textarea {

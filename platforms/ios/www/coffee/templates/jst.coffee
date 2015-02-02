@@ -115,7 +115,7 @@ window.JST['area/login'] = _.template(
       <ul class="fields">
         <li>
           <label>Email</label>
-          <input name="email" id="username">
+          <input type="email" name="email" id="username">
         </li>
         <li>
           <label>Password</label>

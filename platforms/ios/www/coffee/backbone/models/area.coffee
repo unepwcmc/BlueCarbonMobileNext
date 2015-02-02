@@ -71,5 +71,3 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
 
   toJSON: (options) ->
     return _.omit(@attributes, ['downloadingTiles'])
-
-

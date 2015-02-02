@@ -18,7 +18,8 @@ class window.DownloadService
     )
 
   downloadHabitatTiles: (layer, callback) =>
-    success = (fileEntry) ->
+    success = (fileEntry) =>
+      @updateArea(layer)
       callback(null, fileEntry)
 
     ft = new FileTransfer()

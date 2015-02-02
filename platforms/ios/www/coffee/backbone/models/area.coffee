@@ -5,73 +5,12 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
   schema: ->
     "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)"
 
-  downloadLayer: (layer, callback) =>
-    @pendingDownloads.push layer.habitat
+  defaults:
+    downloadingTiles: false
 
-    boundSuccess = (() =>
-      _layer = layer
-      return (fileEntry)=>
-        @layerDownloaded(_layer, fileEntry)
-        callback()
-    )()
-    boundError = (() =>
-      _layer = layer
-      return (error) =>
-        console.log "unable to download #{_layer.habitat}"
-        @pendingDownloads.splice(@pendingDownloads.indexOf(layer.habitat), 1)
-        console.log error
-        callback(error)
-    )()
+  downloadState: ->
+    return "downloading" if @get('downloadingTiles')
 
-    ft = new FileTransfer()
-    ft.download layer.url, @filenameForLayer(layer), boundSuccess, boundError
-
-  downloadData: (@offlineLayer, callback) =>
-    @pendingDownloads = []
-    async.parallel([@downloadLayers, @downloadTiles], callback)
-
-  downloadLayers: (callback) =>
-    async.map(@get('mbtiles'), @downloadLayer, callback)
-
-  downloadTiles: (callback) =>
-    @offlineLayer.saveTiles(17,
-        () =>
-          @downloadingTiles = true
-        ,
-        () =>
-          @downloadingTiles = false
-          alert 'Saved cache'
-          callback()
-        ,
-        (error) =>
-          @downloadingTiles = false
-          console.log(error)
-          alert 'Could not save cache'
-          callback(error)
-      )
-
-
-
-  filenameForLayer: (layer, absolute=true) ->
-    name = ""
-    name += "#{cordova.file.documentsDirectory}" if absolute
-    name += "#{@get('id')}-#{layer.habitat}.mbtiles"
-    name
-
-  layerDownloaded: (layer, fileEntry) =>
-    console.log "downloaded #{layer.habitat}"
-    @pendingDownloads.splice(@pendingDownloads.indexOf(layer.habitat), 1)
-
-    layer.downloadedAt = (new Date()).getTime()
-    mbTiles = @get('mbtiles')
-    for storedLayer, index in mbTiles
-      if storedLayer.habitat == layer.habitat
-        mbTiles[index] = layer
-    @set('mbtiles', mbTiles)
-    @localSave()
-
-  downloadState: () ->
-    return "downloading" if (@pendingDownloads?.length > 0 or @downloadingTiles)
     for layer in @get('mbtiles')
       if layer.status == 'pending' || layer.status == 'generating'
         return 'data generating'
@@ -79,6 +18,7 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
         return 'no data'
       if layer.downloadedAt < Date.parse(layer.last_generated_at)
         return 'out of date'
+
     return "ready"
 
   lastDownloaded: ->
@@ -92,6 +32,12 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
     else
       lowestDownloaded = new Date(lowestDownloaded)
       return "#{lowestDownloaded.getFullYear()}/#{lowestDownloaded.getMonth()+1}/#{lowestDownloaded.getDate()}"
+
+  filenameForLayer: (layer, absolute=true) ->
+    name = ""
+    name += "#{cordova.file.documentsDirectory}" if absolute
+    name += "#{@get('id')}-#{layer.habitat}.mbtiles"
+    name
 
   tileLayers: ->
     layers = []
@@ -123,3 +69,5 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
       data.coordinates = JSON.parse(data.coordinates)
     data
 
+  toJSON: (options) ->
+    return _.omit(@attributes, ['downloadingTiles'])

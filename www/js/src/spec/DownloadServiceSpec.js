@@ -23,6 +23,7 @@
           id: 12
         });
         this.service = new DownloadService(this.area);
+        sinon.stub(this.service, 'updateArea');
         this.layer = {
           habitat: "seagrass",
           url: "http://seagrass.com/api/seagrass.json"
@@ -58,7 +59,7 @@
     });
     describe('.updateArea', function() {
       return it("sets the mbtiles attribute on the Area", function() {
-        var area, expectedLayers, layers, newLayer, service;
+        var area, expectedLayers, layers, newLayer, saveStub, service;
         layers = [
           {
             habitat: 'mangroves'
@@ -74,7 +75,7 @@
           id: 12,
           mbtiles: layers
         });
-        sinon.stub(area, 'localSave');
+        saveStub = sinon.stub(area, 'localSave');
         sinon.stub(Date.prototype, 'getTime', function() {
           return 1234567;
         });
@@ -89,7 +90,8 @@
             habitat: 'seamarshsaltoves'
           }
         ];
-        return expect(area.get('mbtiles')).toEqual(expectedLayers);
+        expect(area.get('mbtiles')).toEqual(expectedLayers);
+        return expect(saveStub.called).toBe(true);
       });
     });
     describe(".downloadHabitats", function() {
@@ -108,6 +110,7 @@
           mbtiles: this.layers
         });
         this.service = new DownloadService(this.area);
+        sinon.stub(this.service, 'updateArea');
         window.FileTransfer = function() {};
         return FileTransfer.prototype = {
           download: function(url, name, callback) {

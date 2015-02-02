@@ -56,6 +56,42 @@
         });
       });
     });
+    describe('.updateArea', function() {
+      return it("sets the mbtiles attribute on the Area", function() {
+        var area, expectedLayers, layers, newLayer, service;
+        layers = [
+          {
+            habitat: 'mangroves'
+          }, {
+            habitat: 'seamarshsaltoves'
+          }
+        ];
+        newLayer = {
+          habitat: 'mangroves',
+          tatibah: 'sevorgnam'
+        };
+        area = new BlueCarbon.Models.Area({
+          id: 12,
+          mbtiles: layers
+        });
+        sinon.stub(area, 'localSave');
+        sinon.stub(Date.prototype, 'getTime', function() {
+          return 1234567;
+        });
+        service = new DownloadService(area);
+        service.updateArea(newLayer);
+        expectedLayers = [
+          {
+            habitat: 'mangroves',
+            tatibah: 'sevorgnam',
+            downloadedAt: 1234567
+          }, {
+            habitat: 'seamarshsaltoves'
+          }
+        ];
+        return expect(area.get('mbtiles')).toEqual(expectedLayers);
+      });
+    });
     describe(".downloadHabitats", function() {
       beforeEach(function() {
         this.layers = [

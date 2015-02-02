@@ -130,6 +130,7 @@
       this.area = options.area;
       this.offlineLayer = options.offlineLayer;
       this.area.on('sync', this.render);
+      this.area.on('change:downloadingTiles', this.render);
       return this.map = options.map;
     };
 
@@ -158,6 +159,7 @@
 
     AreaView.prototype.downloadData = function() {
       var service;
+      this.area.set('downloadingTiles', true);
       service = new DownloadService(this.area);
       return this.zoomToBounds().then((function(_this) {
         return function() {
@@ -167,12 +169,18 @@
         return function() {
           return service.downloadBaseLayer(_this.offlineLayer);
         };
-      })(this)).then(function() {
-        return alert('worky work worked');
-      })["catch"](function(error) {
+      })(this)).then((function(_this) {
+        return function() {
+          return alert('worky work worked');
+        };
+      })(this))["catch"](function(error) {
         alert('Could not download the area');
         return console.log(error);
-      });
+      })["finally"]((function(_this) {
+        return function() {
+          return _this.area.set('downloadingTiles', false);
+        };
+      })(this));
     };
 
     AreaView.prototype.zoomToBounds = function() {

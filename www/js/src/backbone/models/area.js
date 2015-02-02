@@ -19,14 +19,18 @@
       return "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)";
     };
 
+    Area.prototype.defaults = {
+      downloadingTiles: false
+    };
+
     Area.prototype.downloadState = function() {
-      var layer, _i, _len, _ref, _ref1;
-      if (((_ref = this.pendingDownloads) != null ? _ref.length : void 0) > 0 || this.downloadingTiles) {
+      var layer, _i, _len, _ref;
+      if (this.get('downloadingTiles')) {
         return "downloading";
       }
-      _ref1 = this.get('mbtiles');
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        layer = _ref1[_i];
+      _ref = this.get('mbtiles');
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        layer = _ref[_i];
         if (layer.status === 'pending' || layer.status === 'generating') {
           return 'data generating';
         }
@@ -111,6 +115,10 @@
         data.coordinates = JSON.parse(data.coordinates);
       } catch (_error) {}
       return data;
+    };
+
+    Area.prototype.toJSON = function(options) {
+      return _.omit(this.attributes, ['downloadingTiles']);
     };
 
     return Area;

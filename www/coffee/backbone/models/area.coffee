@@ -5,8 +5,12 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
   schema: ->
     "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)"
 
-  downloadState: () ->
-    return "downloading" if (@pendingDownloads?.length > 0 or @downloadingTiles)
+  defaults:
+    downloadingTiles: false
+
+  downloadState: ->
+    return "downloading" if @get('downloadingTiles')
+
     for layer in @get('mbtiles')
       if layer.status == 'pending' || layer.status == 'generating'
         return 'data generating'
@@ -14,6 +18,7 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
         return 'no data'
       if layer.downloadedAt < Date.parse(layer.last_generated_at)
         return 'out of date'
+
     return "ready"
 
   lastDownloaded: ->
@@ -64,3 +69,5 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
       data.coordinates = JSON.parse(data.coordinates)
     data
 
+  toJSON: (options) ->
+    return _.omit(@attributes, ['downloadingTiles'])

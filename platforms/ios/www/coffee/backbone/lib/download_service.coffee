@@ -18,12 +18,19 @@ class window.DownloadService
     )
 
   downloadHabitatTiles: (layer, callback) =>
-    success = (fileEntry) ->
+    success = (fileEntry) =>
+      @updateArea(layer)
       callback(null, fileEntry)
 
     ft = new FileTransfer()
-    ft.download layer.url, @filenameForLayer(layer), success, callback
+    ft.download layer.url, @area.filenameForLayer(layer), success, callback
 
-  filenameForLayer: (layer) ->
-    name = "#{cordova.file.documentsDirectory}"
-    name += "#{@area.get('id')}-#{layer.habitat}.mbtiles"
+  updateArea: (layer) ->
+    layer.downloadedAt = (new Date()).getTime()
+
+    mbTiles = @area.get('mbtiles')
+    for storedLayer, index in mbTiles
+      if storedLayer.habitat == layer.habitat
+        mbTiles[index] = layer
+    @area.set('mbtiles', mbTiles)
+    @area.localSave()

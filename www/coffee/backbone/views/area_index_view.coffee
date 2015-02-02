@@ -66,7 +66,10 @@ class BlueCarbon.Views.AreaView extends Backbone.View
   initialize: (options)->
     @area = options.area
     @offlineLayer = options.offlineLayer
+
     @area.on('sync', @render)
+    @area.on('change:downloadingTiles', @render)
+
     @map = options.map
 
   render: =>
@@ -86,17 +89,20 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     BlueCarbon.bus.trigger('area:startTrip', area: @area)
 
   downloadData: =>
+    @area.set('downloadingTiles', true)
     service = new DownloadService(@area)
 
     @zoomToBounds().then( =>
       service.downloadHabitats()
     ).then( =>
       service.downloadBaseLayer(@offlineLayer)
-    ).then( ->
+    ).then( =>
       alert 'worky work worked'
     ).catch( (error) ->
       alert 'Could not download the area'
       console.log error
+    ).finally( =>
+      @area.set('downloadingTiles', false)
     )
 
   zoomToBounds: =>

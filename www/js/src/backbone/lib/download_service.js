@@ -35,9 +35,12 @@
 
     DownloadService.prototype.downloadHabitatTiles = function(layer, callback) {
       var ft, success;
-      success = function(fileEntry) {
-        return callback(null, fileEntry);
-      };
+      success = (function(_this) {
+        return function(fileEntry) {
+          _this.updateArea(layer);
+          return callback(null, fileEntry);
+        };
+      })(this);
       ft = new FileTransfer();
       return ft.download(layer.url, this.area.filenameForLayer(layer), success, callback);
     };

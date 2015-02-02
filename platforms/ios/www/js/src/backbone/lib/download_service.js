@@ -35,17 +35,28 @@
 
     DownloadService.prototype.downloadHabitatTiles = function(layer, callback) {
       var ft, success;
-      success = function(fileEntry) {
-        return callback(null, fileEntry);
-      };
+      success = (function(_this) {
+        return function(fileEntry) {
+          _this.updateArea(layer);
+          return callback(null, fileEntry);
+        };
+      })(this);
       ft = new FileTransfer();
-      return ft.download(layer.url, this.filenameForLayer(layer), success, callback);
+      return ft.download(layer.url, this.area.filenameForLayer(layer), success, callback);
     };
 
-    DownloadService.prototype.filenameForLayer = function(layer) {
-      var name;
-      name = "" + cordova.file.documentsDirectory;
-      return name += (this.area.get('id')) + "-" + layer.habitat + ".mbtiles";
+    DownloadService.prototype.updateArea = function(layer) {
+      var index, mbTiles, storedLayer, _i, _len;
+      layer.downloadedAt = (new Date()).getTime();
+      mbTiles = this.area.get('mbtiles');
+      for (index = _i = 0, _len = mbTiles.length; _i < _len; index = ++_i) {
+        storedLayer = mbTiles[index];
+        if (storedLayer.habitat === layer.habitat) {
+          mbTiles[index] = layer;
+        }
+      }
+      this.area.set('mbtiles', mbTiles);
+      return this.area.localSave();
     };
 
     return DownloadService;

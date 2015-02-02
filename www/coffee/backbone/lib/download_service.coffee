@@ -22,8 +22,4 @@ class window.DownloadService
       callback(null, fileEntry)
 
     ft = new FileTransfer()
-    ft.download layer.url, @filenameForLayer(layer), success, callback
-
-  filenameForLayer: (layer) ->
-    name = "#{cordova.file.documentsDirectory}"
-    name += "#{@area.get('id')}-#{layer.habitat}.mbtiles"
+    ft.download layer.url, @area.filenameForLayer(layer), success, callback

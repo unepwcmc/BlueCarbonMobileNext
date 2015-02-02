@@ -39,13 +39,7 @@
         return callback(null, fileEntry);
       };
       ft = new FileTransfer();
-      return ft.download(layer.url, this.filenameForLayer(layer), success, callback);
-    };
-
-    DownloadService.prototype.filenameForLayer = function(layer) {
-      var name;
-      name = "" + cordova.file.documentsDirectory;
-      return name += (this.area.get('id')) + "-" + layer.habitat + ".mbtiles";
+      return ft.download(layer.url, this.area.filenameForLayer(layer), success, callback);
     };
 
     return DownloadService;

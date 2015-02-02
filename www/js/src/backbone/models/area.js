@@ -14,88 +14,11 @@
 
     function Area() {
       this.layerDownloaded = __bind(this.layerDownloaded, this);
-      this.downloadTiles = __bind(this.downloadTiles, this);
-      this.downloadLayers = __bind(this.downloadLayers, this);
-      this.downloadData = __bind(this.downloadData, this);
-      this.downloadLayer = __bind(this.downloadLayer, this);
       return Area.__super__.constructor.apply(this, arguments);
     }
 
     Area.prototype.schema = function() {
       return "id INTEGER, title TEXT, coordinates TEXT, mbtiles TEXT, error TEXT, PRIMARY KEY (id)";
-    };
-
-    Area.prototype.downloadLayer = function(layer, callback) {
-      var boundError, boundSuccess, ft;
-      this.pendingDownloads.push(layer.habitat);
-      boundSuccess = ((function(_this) {
-        return function() {
-          var _layer;
-          _layer = layer;
-          return function(fileEntry) {
-            _this.layerDownloaded(_layer, fileEntry);
-            return callback();
-          };
-        };
-      })(this))();
-      boundError = ((function(_this) {
-        return function() {
-          var _layer;
-          _layer = layer;
-          return function(error) {
-            console.log("unable to download " + _layer.habitat);
-            _this.pendingDownloads.splice(_this.pendingDownloads.indexOf(layer.habitat), 1);
-            console.log(error);
-            return callback(error);
-          };
-        };
-      })(this))();
-      ft = new FileTransfer();
-      return ft.download(layer.url, this.filenameForLayer(layer), boundSuccess, boundError);
-    };
-
-    Area.prototype.downloadData = function(_at_offlineLayer, callback) {
-      this.offlineLayer = _at_offlineLayer;
-      this.pendingDownloads = [];
-      return async.parallel([this.downloadLayers, this.downloadTiles], callback);
-    };
-
-    Area.prototype.downloadLayers = function(callback) {
-      return async.map(this.get('mbtiles'), this.downloadLayer, callback);
-    };
-
-    Area.prototype.downloadTiles = function(callback) {
-      return this.offlineLayer.saveTiles(17, (function(_this) {
-        return function() {
-          return _this.downloadingTiles = true;
-        };
-      })(this), (function(_this) {
-        return function() {
-          _this.downloadingTiles = false;
-          alert('Saved cache');
-          return callback();
-        };
-      })(this), (function(_this) {
-        return function(error) {
-          _this.downloadingTiles = false;
-          console.log(error);
-          alert('Could not save cache');
-          return callback(error);
-        };
-      })(this));
-    };
-
-    Area.prototype.filenameForLayer = function(layer, absolute) {
-      var name;
-      if (absolute == null) {
-        absolute = true;
-      }
-      name = "";
-      if (absolute) {
-        name += "" + cordova.file.documentsDirectory;
-      }
-      name += (this.get('id')) + "-" + layer.habitat + ".mbtiles";
-      return name;
     };
 
     Area.prototype.layerDownloaded = function(layer, fileEntry) {
@@ -153,6 +76,19 @@
         lowestDownloaded = new Date(lowestDownloaded);
         return (lowestDownloaded.getFullYear()) + "/" + (lowestDownloaded.getMonth() + 1) + "/" + (lowestDownloaded.getDate());
       }
+    };
+
+    Area.prototype.filenameForLayer = function(layer, absolute) {
+      var name;
+      if (absolute == null) {
+        absolute = true;
+      }
+      name = "";
+      if (absolute) {
+        name += "" + cordova.file.documentsDirectory;
+      }
+      name += (this.get('id')) + "-" + layer.habitat + ".mbtiles";
+      return name;
     };
 
     Area.prototype.tileLayers = function() {

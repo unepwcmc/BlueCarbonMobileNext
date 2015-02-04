@@ -90,13 +90,19 @@ class BlueCarbon.Views.AreaView extends Backbone.View
 
   downloadData: =>
     @area.set('downloadingTiles', true)
-    service = new DownloadService(@area)
+    service = new DownloadService(@area, @offlineLayer)
 
-    @zoomToBounds().then( =>
-      service.downloadHabitats()
-    ).then( =>
-      service.downloadBaseLayer(@offlineLayer)
-    ).then( =>
+    service.onPercentageChange = (percentage) =>
+      @$el.css('background', """
+        linear-gradient(to right,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.1) #{Math.ceil(percentage)}%, transparent 60%),
+        linear-gradient(to bottom, #003458 0%,#001727 100%)
+      """)
+
+    @zoomToBounds().then( ->
+      service.downloadArea()
+    ).then( ->
       alert 'worky work worked'
     ).catch( (error) ->
       alert 'Could not download the area'

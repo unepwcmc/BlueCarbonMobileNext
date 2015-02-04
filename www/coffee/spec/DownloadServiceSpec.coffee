@@ -5,7 +5,8 @@ describe("DownloadService", ->
 
   it("given an area, stores the area as an instance variable", ->
     area = {}
-    service = new DownloadService(area)
+    offlineLayer = {}
+    service = new DownloadService(area, offlineLayer)
 
     expect(service.area).toBe(area)
   )
@@ -21,7 +22,7 @@ describe("DownloadService", ->
   describe(".downloadHabitatTiles()", ->
     beforeEach( ->
       @area = new BlueCarbon.Models.Area(id: 12)
-      @service = new DownloadService(@area)
+      @service = new DownloadService(@area, {})
       sinon.stub(@service, 'updateArea')
 
       @layer = {
@@ -40,9 +41,10 @@ describe("DownloadService", ->
 
       spy = sinon.spy(FileTransfer::, "download")
 
+      mbtilesPath = "/User/Lieferschein/Documents/12-seagrass.mbtiles"
       @service.downloadHabitatTiles(@layer, =>
         expect(
-          spy.calledWith(@layer.url, "/User/Lieferschein/Documents/12-seagrass.mbtiles")
+          spy.calledWith(@layer.url, mbtilesPath)
         ).toBe(true)
 
         done()
@@ -80,7 +82,7 @@ describe("DownloadService", ->
 
       sinon.stub(Date::, 'getTime', -> 1234567)
 
-      service = new DownloadService(area)
+      service = new DownloadService(area, {})
       service.updateArea(newLayer)
 
       expectedLayers = [{
@@ -107,7 +109,7 @@ describe("DownloadService", ->
       }]
 
       @area = new BlueCarbon.Models.Area(id: 12, mbtiles: @layers)
-      @service = new DownloadService(@area)
+      @service = new DownloadService(@area, {})
       sinon.stub(@service, 'updateArea')
 
       window.FileTransfer = ->
@@ -121,34 +123,92 @@ describe("DownloadService", ->
 
   describe('.downloadBaseLayer', ->
     beforeEach( ->
+      @offlineLayer = {saveTiles: (->), on: (->)}
       @area = new BlueCarbon.Models.Area(id: 12)
-      @service = new DownloadService(@area)
+      @service = new DownloadService(@area, @offlineLayer)
     )
 
     it('resolves the promise if the tile saving is successful', (done, fail) ->
-      offlineLayer = {saveTiles: ->}
       stub = sinon.stub(
-        offlineLayer, 'saveTiles',
+        @offlineLayer, 'saveTiles',
         (zoom, startcb, cb, errorcb) -> cb()
       )
 
-      @service.downloadBaseLayer(offlineLayer).then( ->
+      @service.downloadBaseLayer().then( ->
         expect(stub.called).toBe(true)
         done()
-      ).catch(fail)
+      ).catch((err) -> console.log err)
     )
 
     it('rejects the promise if the tile saving is unsuccessful', (done, fail) ->
-      offlineLayer = {saveTiles: ->}
       stub = sinon.stub(
-        offlineLayer, 'saveTiles',
+        @offlineLayer, 'saveTiles',
         (zoom, startcb, cb, errorcb) -> errorcb(new Error('ERRORORORO'))
       )
 
-      @service.downloadBaseLayer(offlineLayer).then(fail).catch(->
+      @service.downloadBaseLayer().then(fail).catch(->
         expect(stub.called).toBe(true)
         done()
       )
+    )
+  )
+
+  describe('.downloadArea', ->
+    beforeEach( ->
+      @offlineLayer = {saveTiles: (->), calculateNbTiles: (-> []), on: (->)}
+      @area = new BlueCarbon.Models.Area(id: 12, mbtiles: [])
+      @service = new DownloadService(@area, @offlineLayer)
+    )
+
+    it('calculates number of total jobs,
+     downloads habitats and base layer', (done, fail) ->
+      calculateTotalJobsStub = sinon.stub(@service, 'calculateTotalJobs')
+      downloadHabitatsStub = sinon.stub(@service, 'downloadHabitats').
+        returns(Promise.resolve())
+      downloadBaseLayerStub = sinon.stub(@service, 'downloadBaseLayer').
+        returns(Promise.resolve())
+
+      @service.downloadArea({}).then(->
+        expect(calculateTotalJobsStub.called).toBe(true)
+        expect(downloadHabitatsStub.called).toBe(true)
+        expect(downloadBaseLayerStub.called).toBe(true)
+        done()
+      ).catch(fail)
+    )
+  )
+
+  describe('.calculateTotalJobs', ->
+    it('calculates how many tiles and habitats have to be downloaded', ->
+      offlineLayer = {calculateNbTiles: (-> 100)}
+      area = new BlueCarbon.Models.Area(id: 12, mbtiles: ['habitat1', 'habitat2'])
+      service = new DownloadService(area, offlineLayer)
+
+      expect(service.calculateTotalJobs()).toBe(102)
+    )
+  )
+
+  describe('.notifyCompletedJob', ->
+    it('augments the number of completed jobs and the completion percentage', ->
+      service = new DownloadService({}, {})
+      service.totalJobs = 2
+
+      expect(service.completedJobs).toBe(0)
+      expect(service.completedPercentage).toBe(0)
+
+      service.notifyCompletedJob()
+
+      expect(service.completedJobs).toBe(1)
+      expect(service.completedPercentage).toBe(50)
+    )
+
+    it('calls the notifying callback, if set', ->
+      spy = sinon.spy()
+
+      service = new DownloadService({}, {})
+      service.onPercentageChange = spy
+
+      service.notifyCompletedJob()
+      expect(spy.called).toBe(true)
     )
   )
 )

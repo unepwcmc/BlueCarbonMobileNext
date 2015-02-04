@@ -1,10 +1,19 @@
 class window.DownloadService
   MAX_ZOOM_LEVEL = 17
-  constructor: (@area) ->
+  constructor: (@area, @offlineLayer) ->
+    @completedPercentage = 0
+    @totalJobs = 0
+    @completedJobs = 0
 
-  downloadBaseLayer: (offlineLayer) ->
-    new Promise( (resolve, reject) ->
-      offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject)
+  downloadArea: ->
+    @calculateTotalJobs()
+
+    @downloadHabitats().then(@downloadBaseLayer)
+
+  downloadBaseLayer: =>
+    new Promise( (resolve, reject) =>
+      @offlineLayer.on('tilecachingprogress', @notifyCompletedJob)
+      @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject)
     )
 
   downloadHabitats: ->
@@ -20,6 +29,7 @@ class window.DownloadService
   downloadHabitatTiles: (layer, callback) =>
     success = (fileEntry) =>
       @updateArea(layer)
+      @notifyCompletedJob()
       callback(null, fileEntry)
 
     ft = new FileTransfer()
@@ -34,3 +44,16 @@ class window.DownloadService
         mbTiles[index] = layer
     @area.set('mbtiles', mbTiles)
     @area.localSave()
+
+  calculateTotalJobs: ->
+    layers = @area.get('mbtiles')
+    @totalJobs = (
+      @offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL) + layers.length
+    )
+
+  notifyCompletedJob: =>
+    @completedJobs += 1
+    @completedPercentage = (@completedJobs * 100) / @totalJobs
+
+    @onPercentageChange?(@completedPercentage)
+

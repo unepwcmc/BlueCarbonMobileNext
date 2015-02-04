@@ -58,7 +58,6 @@ class BlueCarbon.Views.AreaIndexView extends Backbone.View
 class BlueCarbon.Views.AreaView extends Backbone.View
   template: JST['area/area']
   tagName: 'li'
-  class: ''
   events:
     "click .download-data": "downloadData"
     "click .start-trip": "startTrip"

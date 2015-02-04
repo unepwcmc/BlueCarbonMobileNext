@@ -120,8 +120,6 @@
 
     AreaView.prototype.tagName = 'li';
 
-    AreaView.prototype["class"] = '';
-
     AreaView.prototype.events = {
       "click .download-data": "downloadData",
       "click .start-trip": "startTrip",

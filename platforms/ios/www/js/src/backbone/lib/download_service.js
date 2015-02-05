@@ -49,9 +49,10 @@
 
     DownloadService.prototype.downloadHabitatTiles = function(layer, callback) {
       var ft, success;
+      this.updateArea(layer);
       success = (function(_this) {
         return function(fileEntry) {
-          _this.updateArea(layer);
+          _this.area.localSave();
           _this.notifyCompletedJob();
           return callback(null, fileEntry);
         };
@@ -70,8 +71,7 @@
           mbTiles[index] = layer;
         }
       }
-      this.area.set('mbtiles', mbTiles);
-      return this.area.localSave();
+      return this.area.set('mbtiles', mbTiles);
     };
 
     DownloadService.prototype.calculateTotalJobs = function() {

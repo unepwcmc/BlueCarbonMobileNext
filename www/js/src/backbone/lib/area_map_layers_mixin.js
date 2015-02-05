@@ -15,7 +15,9 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
-        db = window.sqlitePlugin.openDatabase(layer.mbtileLocation, "1.0", "Tiles", 2000000);
+        db = window.sqlitePlugin.openDatabase({
+          name: layer.mbtileLocation
+        });
         tileLayer = new L.TileLayer.MBTiles(db, {
           tms: true
         }).addTo(map);

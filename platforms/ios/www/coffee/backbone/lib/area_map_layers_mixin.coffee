@@ -9,7 +9,8 @@ BlueCarbon.Mixins.AreaMapLayers =
     @removeTileLayers()
     @tileLayers ||= {}
     for layer in area.tileLayers()
-      db = window.sqlitePlugin.openDatabase(layer.mbtileLocation, "1.0", "Tiles", 2000000)
+      db = window.sqlitePlugin.openDatabase(name: layer.mbtileLocation)
+
       tileLayer = new L.TileLayer.MBTiles(db,
         tms: true
       ).addTo(map)

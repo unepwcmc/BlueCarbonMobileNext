@@ -36,7 +36,7 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
   filenameForLayer: (layer, absolute=true) ->
     name = ""
     name += "#{cordova.file.documentsDirectory}" if absolute
-    name += "#{@get('id')}-#{layer.habitat}.mbtiles"
+    name += "#{@get('id')}-#{layer.habitat}-#{layer.downloadedAt}.mbtiles"
     name
 
   tileLayers: ->

@@ -3,18 +3,18 @@
  * in the .mbtiles format.
  */
 L.TileLayer.MBTiles = L.TileLayer.extend({
-    initialize: function(db, options) {
-		this.db = db;
-		L.Util.setOptions(this, options);
-	},
-  
+  initialize: function(db, options) {
+    this.db = db;
+    L.Util.setOptions(this, options);
+  },
+
   _loadTile: function(tile, tilePoint) {
     this._adjustTilePoint(tilePoint);
-    
+
     tile._layer = this;
     tile.onload = this._tileOnLoad;
     tile.onerror = this._tileOnError;
-    
+
     var z = this._getZoomForUrl();
     var x = tilePoint.x;
     var y = tilePoint.y;

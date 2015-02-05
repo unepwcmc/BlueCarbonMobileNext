@@ -27,8 +27,10 @@ class window.DownloadService
     )
 
   downloadHabitatTiles: (layer, callback) =>
+    @updateArea(layer)
+
     success = (fileEntry) =>
-      @updateArea(layer)
+      @area.localSave()
       @notifyCompletedJob()
       callback(null, fileEntry)
 
@@ -43,7 +45,6 @@ class window.DownloadService
       if storedLayer.habitat == layer.habitat
         mbTiles[index] = layer
     @area.set('mbtiles', mbTiles)
-    @area.localSave()
 
   calculateTotalJobs: ->
     layers = @area.get('mbtiles')

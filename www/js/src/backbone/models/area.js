@@ -73,7 +73,7 @@
       if (absolute) {
         name += "" + cordova.file.documentsDirectory;
       }
-      name += "" + (this.get('id')) + "-" + layer.habitat + ".mbtiles";
+      name += "" + (this.get('id')) + "-" + layer.habitat + "-" + layer.downloadedAt + ".mbtiles";
       return name;
     };
 

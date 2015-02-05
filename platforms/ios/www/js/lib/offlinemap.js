@@ -1173,8 +1173,11 @@ process.argv = [];
 function noop() {}
 
 process.on = noop;
+process.addListener = noop;
 process.once = noop;
 process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
 process.emit = noop;
 
 process.binding = function (name) {
@@ -2885,14 +2888,14 @@ module.exports = OfflineLayer = (function(_super) {
     })(this));
   };
 
-  OfflineLayer.prototype.calculateNbTiles = function(zoomLevelLimit) {
+  OfflineLayer.prototype.calculateNbTiles = function(zoomLevelLimit, bounds) {
     var count, key, tileImagesToQuery;
     if (this._map.getZoom() < this._minZoomLevel) {
       this._reportError("ZOOM_LEVEL_TOO_LOW");
       return -1;
     }
     count = 0;
-    tileImagesToQuery = this._getTileImages(zoomLevelLimit);
+    tileImagesToQuery = this._getTileImages(zoomLevelLimit, bounds);
     for (key in tileImagesToQuery) {
       count++;
     }
@@ -2906,13 +2909,15 @@ module.exports = OfflineLayer = (function(_super) {
     return false;
   };
 
-  OfflineLayer.prototype._getTileImages = function(zoomLevelLimit) {
-    var arrayLength, bounds, i, j, map, maxX, maxY, minX, minY, point, roundedTileBounds, startingZoom, tileBounds, tileImagesToQuery, tileSize, tilesInScreen, x, y, _i, _j, _k, _ref, _ref1, _ref2, _ref3;
+  OfflineLayer.prototype._getTileImages = function(zoomLevelLimit, bounds) {
+    var arrayLength, i, j, map, maxX, maxY, minX, minY, point, roundedTileBounds, startingZoom, tileBounds, tileImagesToQuery, tileSize, tilesInScreen, x, y, _i, _j, _k, _ref, _ref1, _ref2, _ref3;
     zoomLevelLimit = zoomLevelLimit || this._map.getMaxZoom();
     tileImagesToQuery = {};
     map = this._map;
     startingZoom = map.getZoom();
-    bounds = map.getPixelBounds();
+    if (bounds == null) {
+      bounds = map.getPixelBounds();
+    }
     tileSize = this._getTileSize();
     roundedTileBounds = L.bounds(bounds.min.divideBy(tileSize)._floor(), bounds.max.divideBy(tileSize)._floor());
     tilesInScreen = [];
@@ -2937,7 +2942,7 @@ module.exports = OfflineLayer = (function(_super) {
     return tileImagesToQuery;
   };
 
-  OfflineLayer.prototype.saveTiles = function(zoomLevelLimit, onStarted, onSuccess, onError) {
+  OfflineLayer.prototype.saveTiles = function(zoomLevelLimit, onStarted, onSuccess, onError, bounds) {
     var tileImagesToQuery;
     this._alreadyReportedErrorForThisActions = false;
     if (!this._tileImagesStore) {
@@ -2955,7 +2960,7 @@ module.exports = OfflineLayer = (function(_super) {
       onError("ZOOM_LEVEL_TOO_LOW");
       return;
     }
-    tileImagesToQuery = this._getTileImages(zoomLevelLimit);
+    tileImagesToQuery = this._getTileImages(zoomLevelLimit, bounds);
     return this._tileImagesStore.saveImages(tileImagesToQuery, onStarted, onSuccess, (function(_this) {
       return function(error) {
         _this._reportError("SAVING_TILES", error);

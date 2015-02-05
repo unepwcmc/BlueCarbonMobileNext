@@ -13,7 +13,7 @@ class window.DownloadService
   downloadBaseLayer: =>
     new Promise( (resolve, reject) =>
       @offlineLayer.on('tilecachingprogress', @notifyCompletedJob)
-      @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject)
+      @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject, @areaBounds())
     )
 
   downloadHabitats: ->
@@ -48,7 +48,7 @@ class window.DownloadService
   calculateTotalJobs: ->
     layers = @area.get('mbtiles')
     @totalJobs = (
-      @offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL) + layers.length
+      @offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL, @areaBounds()) + layers.length
     )
 
   notifyCompletedJob: =>
@@ -56,4 +56,12 @@ class window.DownloadService
     @completedPercentage = (@completedJobs * 100) / @totalJobs
 
     @onPercentageChange?(@completedPercentage)
+
+  areaBounds: ->
+    areaBounds = L.latLngBounds(@area.coordsAsLatLngArray())
+    areaZoom = @offlineLayer._map.getBoundsZoom(areaBounds)
+    min = @offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom)
+    max = @offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
+
+    {min: min , max: max}
 

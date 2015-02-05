@@ -27,7 +27,7 @@
       return new Promise((function(_this) {
         return function(resolve, reject) {
           _this.offlineLayer.on('tilecachingprogress', _this.notifyCompletedJob);
-          return _this.offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (function() {}), resolve, reject);
+          return _this.offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (function() {}), resolve, reject, _this.areaBounds());
         };
       })(this));
     };
@@ -77,13 +77,23 @@
     DownloadService.prototype.calculateTotalJobs = function() {
       var layers;
       layers = this.area.get('mbtiles');
-      return this.totalJobs = this.offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL) + layers.length;
+      return this.totalJobs = this.offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL, this.areaBounds()) + layers.length;
     };
 
     DownloadService.prototype.notifyCompletedJob = function() {
       this.completedJobs += 1;
       this.completedPercentage = (this.completedJobs * 100) / this.totalJobs;
       return typeof this.onPercentageChange === "function" ? this.onPercentageChange(this.completedPercentage) : void 0;
+    };
+
+    DownloadService.prototype.areaBounds = function() {
+      var areaBounds, areaZoom;
+      areaBounds = L.latLngBounds(this.area.coordsAsLatLngArray());
+      areaZoom = this.offlineLayer._map.getBoundsZoom(areaBounds);
+      return {
+        min: this.offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom),
+        max: this.offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
+      };
     };
 
     return DownloadService;

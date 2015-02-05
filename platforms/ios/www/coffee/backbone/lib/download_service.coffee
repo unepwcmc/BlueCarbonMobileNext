@@ -59,10 +59,11 @@ class window.DownloadService
     @onPercentageChange?(@completedPercentage)
 
   areaBounds: ->
-    areaBounds = L.latLngBounds(@area.coordsAsLatLngArray())
+    areaBounds = @area.bounds()
     areaZoom = @offlineLayer._map.getBoundsZoom(areaBounds)
-    min = @offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom)
-    max = @offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
 
-    {min: min , max: max}
+    {
+      min: @offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom)
+      max: @offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
+    }
 

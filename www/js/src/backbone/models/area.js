@@ -110,6 +110,10 @@
       return latLngs;
     };
 
+    Area.prototype.bounds = function() {
+      return L.latLngBounds(this.coordsAsLatLngArray());
+    };
+
     Area.prototype.parse = function(data) {
       try {
         data.coordinates = JSON.parse(data.coordinates);

@@ -87,14 +87,12 @@
     };
 
     DownloadService.prototype.areaBounds = function() {
-      var areaBounds, areaZoom, max, min;
-      areaBounds = L.latLngBounds(this.area.coordsAsLatLngArray());
+      var areaBounds, areaZoom;
+      areaBounds = this.area.bounds();
       areaZoom = this.offlineLayer._map.getBoundsZoom(areaBounds);
-      min = this.offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom);
-      max = this.offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom);
       return {
-        min: min,
-        max: max
+        min: this.offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom),
+        max: this.offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
       };
     };
 

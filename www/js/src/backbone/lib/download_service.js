@@ -88,7 +88,7 @@
 
     DownloadService.prototype.areaBounds = function() {
       var areaBounds, areaZoom;
-      areaBounds = L.latLngBounds(this.area.coordsAsLatLngArray());
+      areaBounds = this.area.bounds();
       areaZoom = this.offlineLayer._map.getBoundsZoom(areaBounds);
       return {
         min: this.offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom),

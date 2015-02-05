@@ -64,6 +64,9 @@ class BlueCarbon.Models.Area extends Backbone.SyncableModel
 
     return latLngs
 
+  bounds: ->
+    L.latLngBounds(@coordsAsLatLngArray())
+
   parse: (data)->
     try
       data.coordinates = JSON.parse(data.coordinates)

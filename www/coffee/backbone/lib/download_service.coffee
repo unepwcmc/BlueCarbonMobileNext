@@ -59,7 +59,7 @@ class window.DownloadService
     @onPercentageChange?(@completedPercentage)
 
   areaBounds: ->
-    areaBounds = L.latLngBounds(@area.coordsAsLatLngArray())
+    areaBounds = @area.bounds()
     areaZoom = @offlineLayer._map.getBoundsZoom(areaBounds)
 
     {

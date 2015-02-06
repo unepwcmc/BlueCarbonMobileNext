@@ -319,7 +319,7 @@ ul.fields input{
 }
 
 #area-list > li {
-  background: #2A303E;
+  background: #232833;
   padding: 7px 12px;
   margin-bottom: 0;
   margin: 10px;
@@ -329,6 +329,11 @@ ul.fields input{
   overflow:hidden;
   color: #D3D5D9;
 }
+
+#area-list > li.downloaded {
+  background-color: #2A303E;
+}
+
 .area-attributes {
   float:left;
   width: 190px;

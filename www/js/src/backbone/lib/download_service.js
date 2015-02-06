@@ -11,6 +11,7 @@
       this.area = area;
       this.offlineLayer = offlineLayer;
       this.notifyCompletedJob = __bind(this.notifyCompletedJob, this);
+      this.calculateTotalJobs = __bind(this.calculateTotalJobs, this);
       this.deleteFile = __bind(this.deleteFile, this);
       this.downloadHabitatTiles = __bind(this.downloadHabitatTiles, this);
       this.downloadHabitats = __bind(this.downloadHabitats, this);
@@ -21,15 +22,15 @@
     }
 
     DownloadService.prototype.downloadArea = function() {
-      this.calculateTotalJobs();
-      return this.removeExistingTiles().then(this.downloadHabitats).then(this.downloadBaseLayer);
+      return this.removeExistingTiles().then(this.downloadBaseLayer).then(this.downloadHabitats);
     };
 
     DownloadService.prototype.downloadBaseLayer = function() {
       return new Promise((function(_this) {
         return function(resolve, reject) {
           _this.offlineLayer.on('tilecachingprogress', _this.notifyCompletedJob);
-          return _this.offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (function() {}), resolve, reject, _this.areaBounds());
+          _this.offlineLayer.on('tilecachingprogressstart', _this.calculateTotalJobs);
+          return _this.offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (function() {}), resolve, reject, _this.area.bounds());
         };
       })(this));
     };
@@ -105,26 +106,17 @@
       }), callback);
     };
 
-    DownloadService.prototype.calculateTotalJobs = function() {
+    DownloadService.prototype.calculateTotalJobs = function(opts) {
       var layers;
       layers = this.area.get('mbtiles');
-      return this.totalJobs = this.offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL, this.areaBounds()) + layers.length;
+      return this.totalJobs = opts.nbTiles + layers.length;
     };
 
     DownloadService.prototype.notifyCompletedJob = function() {
       this.completedJobs += 1;
-      this.completedPercentage = (this.completedJobs * 100) / this.totalJobs;
+      this.completedPercentage = (this.completedJobs / this.totalJobs) * 100;
+      console.log("" + this.completedJobs + "/" + this.totalJobs + " = " + this.completedPercentage);
       return typeof this.onPercentageChange === "function" ? this.onPercentageChange(this.completedPercentage) : void 0;
-    };
-
-    DownloadService.prototype.areaBounds = function() {
-      var areaBounds, areaZoom;
-      areaBounds = this.area.bounds();
-      areaZoom = this.offlineLayer._map.getBoundsZoom(areaBounds);
-      return {
-        min: this.offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom),
-        max: this.offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
-      };
     };
 
     return DownloadService;

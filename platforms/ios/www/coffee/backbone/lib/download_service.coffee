@@ -6,14 +6,13 @@ class window.DownloadService
     @completedJobs = 0
 
   downloadArea: ->
-    @calculateTotalJobs()
-
-    @removeExistingTiles().then(@downloadHabitats).then(@downloadBaseLayer)
+    @removeExistingTiles().then(@downloadBaseLayer).then(@downloadHabitats)
 
   downloadBaseLayer: =>
     new Promise( (resolve, reject) =>
       @offlineLayer.on('tilecachingprogress', @notifyCompletedJob)
-      @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject, @areaBounds())
+      @offlineLayer.on('tilecachingprogressstart', @calculateTotalJobs)
+      @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject, @area.bounds())
     )
 
   downloadHabitats: =>
@@ -64,24 +63,14 @@ class window.DownloadService
       ), (-> callback()))
     ), callback)
 
-  calculateTotalJobs: ->
+  calculateTotalJobs: (opts) =>
     layers = @area.get('mbtiles')
-    @totalJobs = (
-      @offlineLayer.calculateNbTiles(MAX_ZOOM_LEVEL, @areaBounds()) + layers.length
-    )
+    @totalJobs = opts.nbTiles + layers.length
 
   notifyCompletedJob: =>
     @completedJobs += 1
-    @completedPercentage = (@completedJobs * 100) / @totalJobs
+    @completedPercentage = (@completedJobs / @totalJobs) * 100
+    console.log "#{@completedJobs}/#{@totalJobs} = #{@completedPercentage}"
 
     @onPercentageChange?(@completedPercentage)
-
-  areaBounds: ->
-    areaBounds = @area.bounds()
-    areaZoom = @offlineLayer._map.getBoundsZoom(areaBounds)
-
-    {
-      min: @offlineLayer._map.project(areaBounds.getNorthWest(), areaZoom)
-      max: @offlineLayer._map.project(areaBounds.getSouthEast(), areaZoom)
-    }
 

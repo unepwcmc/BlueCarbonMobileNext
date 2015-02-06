@@ -109,9 +109,11 @@
     __extends(AreaView, _super);
 
     function AreaView() {
+      this.updateProgressBar = __bind(this.updateProgressBar, this);
       this.zoomToBounds = __bind(this.zoomToBounds, this);
       this.downloadData = __bind(this.downloadData, this);
       this.startTrip = __bind(this.startTrip, this);
+      this.setClass = __bind(this.setClass, this);
       this.render = __bind(this.render, this);
       return AreaView.__super__.constructor.apply(this, arguments);
     }
@@ -119,8 +121,6 @@
     AreaView.prototype.template = JST['area/area'];
 
     AreaView.prototype.tagName = 'li';
-
-    AreaView.prototype["class"] = '';
 
     AreaView.prototype.events = {
       "click .download-data": "downloadData",
@@ -137,6 +137,7 @@
     };
 
     AreaView.prototype.render = function() {
+      this.setClass();
       this.$el.html(this.template({
         area: this.area
       }));
@@ -153,6 +154,15 @@
       return this;
     };
 
+    AreaView.prototype.setClass = function() {
+      var _ref;
+      if (((_ref = this.area) != null ? _ref.downloadState() : void 0) === "ready") {
+        return this.$el.addClass("downloaded");
+      } else {
+        return this.$el.removeClass("downloaded");
+      }
+    };
+
     AreaView.prototype.startTrip = function() {
       return BlueCarbon.bus.trigger('area:startTrip', {
         area: this.area
@@ -161,18 +171,11 @@
 
     AreaView.prototype.downloadData = function() {
       var service;
-      this.area.set('downloadingTiles', true);
       service = new DownloadService(this.area, this.offlineLayer);
-      service.onPercentageChange = (function(_this) {
-        return function(percentage) {
-          return _this.$el.css('background', "linear-gradient(to right,\n  rgba(255, 255, 255, 0.1) 0%,\n  rgba(255, 255, 255, 0.1) " + (Math.ceil(percentage)) + "%, transparent 60%),\nlinear-gradient(to bottom, #003458 0%,#001727 100%)");
-        };
-      })(this);
-      return this.zoomToBounds().then(function() {
-        return service.downloadArea();
-      }).then(function() {
-        return alert('worky work worked');
-      })["catch"](function(error) {
+      service.onPercentageChange = this.updateProgressBar;
+      this.area.set('downloadingTiles', true);
+      this.zoomToBounds();
+      return service.downloadArea()["catch"](function(error) {
         alert('Could not download the area');
         return console.log(error);
       })["finally"]((function(_this) {
@@ -183,18 +186,18 @@
     };
 
     AreaView.prototype.zoomToBounds = function() {
-      return new Promise((function(_this) {
-        return function(resolve, reject) {
-          var bounds;
-          bounds = _this.area.coordsAsLatLngArray();
-          _this.map.fitBounds(bounds);
-          return _this.map.once('moveend', resolve);
-        };
-      })(this));
+      var bounds;
+      bounds = this.area.coordsAsLatLngArray();
+      return this.map.fitBounds(bounds);
     };
 
     AreaView.prototype.onClose = function() {
       return this.map.removeLayer(this.mapPolygon);
+    };
+
+    AreaView.prototype.updateProgressBar = function(percentage) {
+      percentage = Math.ceil(percentage);
+      return this.$el.css('background', "linear-gradient(to right, #2A303E " + percentage + "%, transparent " + percentage + "%),\nlinear-gradient(to bottom, #232833 0%,#232833 100%)");
     };
 
     return AreaView;

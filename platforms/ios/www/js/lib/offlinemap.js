@@ -1124,8 +1124,8 @@
 
 }());
 
-}).call(this,require("/home/clayton/dev/mWater/offline-leaflet-map/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/home/clayton/dev/mWater/offline-leaflet-map/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":2}],2:[function(require,module,exports){
+}).call(this,require("+xKvab"))
+},{"+xKvab":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2890,7 +2890,7 @@ module.exports = OfflineLayer = (function(_super) {
 
   OfflineLayer.prototype.calculateNbTiles = function(zoomLevelLimit, bounds) {
     var count, key, tileImagesToQuery;
-    if (this._map.getZoom() < this._minZoomLevel) {
+    if (this._map.getZoom() < this._minZoomLevel && (bounds == null)) {
       this._reportError("ZOOM_LEVEL_TOO_LOW");
       return -1;
     }
@@ -2914,9 +2914,12 @@ module.exports = OfflineLayer = (function(_super) {
     zoomLevelLimit = zoomLevelLimit || this._map.getMaxZoom();
     tileImagesToQuery = {};
     map = this._map;
-    startingZoom = map.getZoom();
-    if (bounds == null) {
+    if (bounds != null) {
+      startingZoom = map.getBoundsZoom(bounds);
+      bounds = this._projectedBounds(bounds);
+    } else {
       bounds = map.getPixelBounds();
+      startingZoom = map.getZoom();
     }
     tileSize = this._getTileSize();
     roundedTileBounds = L.bounds(bounds.min.divideBy(tileSize)._floor(), bounds.max.divideBy(tileSize)._floor());
@@ -2955,7 +2958,7 @@ module.exports = OfflineLayer = (function(_super) {
       onError("system is busy.");
       return;
     }
-    if (this._map.getZoom() < this._minZoomLevel) {
+    if (this._map.getZoom() < this._minZoomLevel && (bounds == null)) {
       this._reportError("ZOOM_LEVEL_TOO_LOW");
       onError("ZOOM_LEVEL_TOO_LOW");
       return;
@@ -3042,6 +3045,15 @@ module.exports = OfflineLayer = (function(_super) {
     var tilePoint;
     tilePoint = this._createNormalizedTilePoint(x, y, z);
     return tilePoint.x + ", " + tilePoint.y + ", " + tilePoint.z;
+  };
+
+  OfflineLayer.prototype._projectedBounds = function(bounds) {
+    var areaZoom;
+    areaZoom = this._map.getBoundsZoom(bounds);
+    return {
+      min: this._map.project(bounds.getNorthWest(), areaZoom),
+      max: this._map.project(bounds.getSouthEast(), areaZoom)
+    };
   };
 
   return OfflineLayer;

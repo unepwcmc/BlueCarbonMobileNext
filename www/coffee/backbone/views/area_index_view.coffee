@@ -73,6 +73,7 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     @map = options.map
 
   render: =>
+    @setClass()
     @$el.html(@template(area:@area))
     @map.removeLayer(@mapPolygon) if @mapPolygon?
     @mapPolygon = new L.Polygon(@area.coordsAsLatLngArray(),
@@ -85,26 +86,23 @@ class BlueCarbon.Views.AreaView extends Backbone.View
 
     return @
 
+  setClass: =>
+    if @area?.downloadState() is "ready"
+      @$el.addClass("downloaded")
+    else
+      @$el.removeClass("downloaded")
+
   startTrip: =>
     BlueCarbon.bus.trigger('area:startTrip', area: @area)
 
   downloadData: =>
-    @area.set('downloadingTiles', true)
     service = new DownloadService(@area, @offlineLayer)
+    service.onPercentageChange = @updateProgressBar
 
-    service.onPercentageChange = (percentage) =>
-      @$el.css('background', """
-        linear-gradient(to right,
-          rgba(255, 255, 255, 0.1) 0%,
-          rgba(255, 255, 255, 0.1) #{Math.ceil(percentage)}%, transparent 60%),
-        linear-gradient(to bottom, #003458 0%,#001727 100%)
-      """)
+    @area.set('downloadingTiles', true)
+    @zoomToBounds()
 
-    @zoomToBounds().then( ->
-      service.downloadArea()
-    ).then( ->
-      alert 'worky work worked'
-    ).catch( (error) ->
+    service.downloadArea().catch( (error) ->
       alert 'Could not download the area'
       console.log error
     ).finally( =>
@@ -112,11 +110,15 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     )
 
   zoomToBounds: =>
-    new Promise( (resolve, reject) =>
-      bounds = @area.coordsAsLatLngArray()
-      @map.fitBounds(bounds)
-      @map.once('moveend', resolve)
-    )
+    bounds = @area.coordsAsLatLngArray()
+    @map.fitBounds(bounds)
 
   onClose: ->
     @map.removeLayer(@mapPolygon)
+
+  updateProgressBar: (percentage) =>
+    percentage = Math.ceil(percentage)
+    @$el.css('background', """
+      linear-gradient(to right, #2A303E #{percentage}%, transparent #{percentage}%),
+      linear-gradient(to bottom, #232833 0%,#232833 100%)
+    """)

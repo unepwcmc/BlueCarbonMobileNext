@@ -173,7 +173,7 @@ window.JST['area/area'] = _.template(
       </div>
     <% } else if (downloadState === 'data generating') { %>
       <div class='area-actions data-generating'>
-        <img src="css/images/timer.gif"/>
+        <div class="loader"></div>
         <div>GENERATING</div>
       </div>
     <% } else if (downloadState === 'downloading') { %>

@@ -8,7 +8,7 @@ class window.DownloadService
   downloadArea: ->
     @calculateTotalJobs()
 
-    @downloadHabitats().then(@downloadBaseLayer)
+    @removeExistingTiles().then(@downloadHabitats).then(@downloadBaseLayer)
 
   downloadBaseLayer: =>
     new Promise( (resolve, reject) =>
@@ -16,7 +16,7 @@ class window.DownloadService
       @offlineLayer.saveTiles(MAX_ZOOM_LEVEL, (->), resolve, reject, @areaBounds())
     )
 
-  downloadHabitats: ->
+  downloadHabitats: =>
     new Promise( (resolve, reject) =>
       layers = @area.get('mbtiles')
 
@@ -45,6 +45,24 @@ class window.DownloadService
       if storedLayer.habitat == layer.habitat
         mbTiles[index] = layer
     @area.set('mbtiles', mbTiles)
+
+  removeExistingTiles: ->
+    new Promise( (resolve, reject) =>
+      layers = @area.get('mbtiles')
+
+      async.each(layers, @deleteFile, (err, results) ->
+        return reject(err) if err?
+        resolve(results)
+      )
+    )
+
+  deleteFile: (layer, callback) =>
+    filename = @area.filenameForLayer(layer, false)
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, ( (fs) ->
+      fs.root.getFile(filename, {}, ( (fileEntry) ->
+        fileEntry.remove((-> callback()), callback)
+      ), (-> callback()))
+    ), callback)
 
   calculateTotalJobs: ->
     layers = @area.get('mbtiles')

@@ -11,7 +11,9 @@
       this.area = area;
       this.offlineLayer = offlineLayer;
       this.notifyCompletedJob = __bind(this.notifyCompletedJob, this);
+      this.deleteFile = __bind(this.deleteFile, this);
       this.downloadHabitatTiles = __bind(this.downloadHabitatTiles, this);
+      this.downloadHabitats = __bind(this.downloadHabitats, this);
       this.downloadBaseLayer = __bind(this.downloadBaseLayer, this);
       this.completedPercentage = 0;
       this.totalJobs = 0;
@@ -20,7 +22,7 @@
 
     DownloadService.prototype.downloadArea = function() {
       this.calculateTotalJobs();
-      return this.downloadHabitats().then(this.downloadBaseLayer);
+      return this.removeExistingTiles().then(this.downloadHabitats).then(this.downloadBaseLayer);
     };
 
     DownloadService.prototype.downloadBaseLayer = function() {
@@ -72,6 +74,35 @@
         }
       }
       return this.area.set('mbtiles', mbTiles);
+    };
+
+    DownloadService.prototype.removeExistingTiles = function() {
+      return new Promise((function(_this) {
+        return function(resolve, reject) {
+          var layers;
+          layers = _this.area.get('mbtiles');
+          return async.each(layers, _this.deleteFile, function(err, results) {
+            if (err != null) {
+              return reject(err);
+            }
+            return resolve(results);
+          });
+        };
+      })(this));
+    };
+
+    DownloadService.prototype.deleteFile = function(layer, callback) {
+      var filename;
+      filename = this.area.filenameForLayer(layer, false);
+      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (function(fs) {
+        return fs.root.getFile(filename, {}, (function(fileEntry) {
+          return fileEntry.remove((function() {
+            return callback();
+          }), callback);
+        }), (function() {
+          return callback();
+        }));
+      }), callback);
     };
 
     DownloadService.prototype.calculateTotalJobs = function() {

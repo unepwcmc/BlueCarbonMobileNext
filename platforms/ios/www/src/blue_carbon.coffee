@@ -67,7 +67,8 @@ class BlueCarbon.App
       )
     )
 
-    document.addEventListener "deviceready", @start, false
+    unless options.waitForRemoteConsole
+      document.addEventListener "deviceready", @start, false
 
   start: =>
     StatusBar.hide()

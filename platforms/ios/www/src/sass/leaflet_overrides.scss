@@ -1,0 +1,87 @@
+.leaflet-control-zoom a:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.leaflet-control-zoom a:active {
+  background-color: #fff;
+}
+
+.leaflet-container a.leaflet-active {
+  outline: none;
+}
+
+.leaflet-gps-controls {
+  width: 115px;
+  background-color: #3D4459;
+  border-radius: 3px;
+  border: 1px solid #3C4B5B;
+  padding: 3px;
+}
+
+.leaflet-buttons-jump-to-location-img {
+  width: 32px;
+  height: 32px;
+  float:left;
+}
+
+.leaflet-buttons-gps-show-hide {
+  width: 75px;
+  height: 27px;
+  float:left;
+  margin-top: 2px;
+  margin-left: 5px;
+}
+
+.leaflet-control-layers {
+  margin-bottom: 0 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background-color: #1f2229;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  width: 185px;
+}
+
+.leaflet-control-layers-overlays {
+  background-color: #2f3b4a;
+  padding: 10px;
+  color: white;
+}
+
+.leaflet-control-layers-overlays label {
+  padding: 10px 0 10px 0;
+  font-size: 1.3em;
+  border-bottom: 1px solid #7c838d;
+}
+
+.leaflet-control-layers-overlays label:first-child {
+  padding: 0 0 10px 0;
+}
+
+.leaflet-control-layers-overlays label:last-child {
+  padding: 10px 0 0 0;
+  border: 0;
+}
+
+.leaflet-control-layers-toggle {
+  height: 27px !important;
+  padding-left: 80%;
+  background-image: url(../images/layer-control-arrow-up.png) !important;
+}
+
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+  display: block;
+  background-image: url(../images/layer-control-arrow-down.png) !important;
+}
+
+.leaflet-div-icon-first {
+  margin-left: -8px !important;
+  margin-top: -8px !important;
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* We're not using leaflet draw help messages, so hide them */
+.leaflet-draw-label {
+  display:none;
+}

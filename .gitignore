@@ -37,3 +37,4 @@ IOS/www/
 npm-debug.log
 console.log
 node_modules
+dist

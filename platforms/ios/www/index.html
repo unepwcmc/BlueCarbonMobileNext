@@ -4,9 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-    <link rel="stylesheet" type="text/css" href="css/leaflet.css" />
-    <link rel="stylesheet" type="text/css" href="css/leaflet.draw.css" />
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+    <link rel="stylesheet" type="text/css" href="dist/vendor/css/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="dist/vendor/css/leaflet.draw.css" />
+    <link rel="stylesheet" type="text/css" href="dist/css/index.css" />
+
     <title>Blue Carbon</title>
   </head>
 
@@ -25,39 +27,40 @@
     </div>
 
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/lib/bluebird.min.js"></script>
-    <script type="text/javascript" src="js/lib/async.js"></script>
-    <script type="text/javascript" src="js/lib/json2.js"></script>
-    <script type="text/javascript" src="js/lib/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="js/lib/underscore.js"></script>
-    <script type="text/javascript" src="js/lib/backbone.js"></script>
-    <script type="text/javascript" src="js/lib/leaflet-src.js"></script>
-    <script type="text/javascript" src="js/lib/leaflet.draw-src.js"></script>
-    <script type="text/javascript" src="js/lib/offlinemap.js"></script>
-    <script type="text/javascript" src="js/src/lib/leaflet.control.gps.js"></script>
-    <script type="text/javascript" src="js/src/lib/leaflet.control.cache.js"></script>
-    <script type="text/javascript" src="js/lib/TileLayer.MBTiles.js"></script>
-    <script type="text/javascript" src="js/lib/SQLitePlugin.js"></script>
-    <script type="text/javascript" src="js/src/templates/jst.js"></script>
-    <script type="text/javascript" src="js/src/jquery_form_serialize.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/download_service.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/wcmc_controller.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/syncable_model.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/syncable_collection.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/area_map_layers_mixin.js"></script>
-    <script type="text/javascript" src="js/src/blue_carbon.js"></script>
-    <script type="text/javascript" src="js/src/backbone/controller.js"></script>
-    <script type="text/javascript" src="js/src/backbone/lib/view_manager.js"></script>
-    <script type="text/javascript" src="js/src/backbone/models/user.js"></script>
-    <script type="text/javascript" src="js/src/backbone/models/validation.js"></script>
-    <script type="text/javascript" src="js/src/backbone/models/area.js"></script>
-    <script type="text/javascript" src="js/src/backbone/collections/areas.js"></script>
-    <script type="text/javascript" src="js/src/backbone/collections/validations.js"></script>
-    <script type="text/javascript" src="js/src/backbone/views/add_validation_view.js"></script>
-    <script type="text/javascript" src="js/src/backbone/views/area_edit_view.js"></script>
-    <script type="text/javascript" src="js/src/backbone/views/area_index_view.js"></script>
-    <script type="text/javascript" src="js/src/backbone/views/login_view.js"></script>
-    <script type="text/javascript" src="js/src/backbone/views/validation_view.js"></script>
+
+    <script type="text/javascript" src="dist/vendor/js/bluebird.min.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/async.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/json2.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/underscore.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/backbone.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/leaflet-src.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/leaflet.draw-src.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/offlinemap.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/TileLayer.MBTiles.js"></script>
+    <script type="text/javascript" src="dist/vendor/js/SQLitePlugin.js"></script>
+
+    <script type="text/javascript" src="dist/lib/leaflet.control.gps.js"></script>
+    <script type="text/javascript" src="dist/templates/jst.js"></script>
+    <script type="text/javascript" src="dist/lib/jquery_form_serialize.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/download_service.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/wcmc_controller.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/syncable_model.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/syncable_collection.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/area_map_layers_mixin.js"></script>
+    <script type="text/javascript" src="dist/blue_carbon.js"></script>
+    <script type="text/javascript" src="dist/backbone/controller.js"></script>
+    <script type="text/javascript" src="dist/backbone/lib/view_manager.js"></script>
+    <script type="text/javascript" src="dist/backbone/models/user.js"></script>
+    <script type="text/javascript" src="dist/backbone/models/validation.js"></script>
+    <script type="text/javascript" src="dist/backbone/models/area.js"></script>
+    <script type="text/javascript" src="dist/backbone/collections/areas.js"></script>
+    <script type="text/javascript" src="dist/backbone/collections/validations.js"></script>
+    <script type="text/javascript" src="dist/backbone/views/add_validation_view.js"></script>
+    <script type="text/javascript" src="dist/backbone/views/area_edit_view.js"></script>
+    <script type="text/javascript" src="dist/backbone/views/area_index_view.js"></script>
+    <script type="text/javascript" src="dist/backbone/views/login_view.js"></script>
+    <script type="text/javascript" src="dist/backbone/views/validation_view.js"></script>
 
     <script type="text/javascript">
       // Prevent user from being able to scroll in surrounding WebView

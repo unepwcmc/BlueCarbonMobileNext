@@ -22,15 +22,16 @@ class BlueCarbon.Views.LoginView extends Backbone.View
 
     @model.login(
       $('#login-form').serializeObject(),
-      success: (data)=>
+      success: (data) =>
+        @model.trigger('user:loggedIn', @model)
+
         $('#login-form .loading-spinner').hide()
         $('#login-form input').blur()
-        @model.trigger('user:loggedIn', @model)
-        $(window).scrollTop(0)
-      error: (data)=>
-        $('#login-form .loading-spinner').hide()
+      error: (data) =>
         @showError('Unable to login')
-        $(window).scrollTop(0)
+
+        $('#login-form .loading-spinner').hide()
+        $('#login-form input').blur()
     )
 
   render: ->

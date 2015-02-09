@@ -83,6 +83,12 @@ class BlueCarbon.App
 
     @createBaseLayer()
     @addControls()
+    @addBlurListener()
+
+  addBlurListener: ->
+    $('body').on('blur', 'input, textarea', ->
+      $(window).scrollTop(0)
+    )
 
   addControls: (offlineLayer) ->
     @map.addControl(new L.Control.ShowLocation())

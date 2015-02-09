@@ -17,6 +17,7 @@ var paths = {
 
 gulp.task('application', function() {
   return gulp.src(paths.application)
+    .pipe(plumber())
     .pipe(coffee())
     .pipe(gulp.dest('www/dist/'));
 });
@@ -40,6 +41,7 @@ gulp.task('images', function() {
 
 gulp.task('tests', function() {
   return gulp.src(paths.tests)
+    .pipe(plumber())
     .pipe(coffee())
     .pipe(gulp.dest('www/tests/dist/'));
 })

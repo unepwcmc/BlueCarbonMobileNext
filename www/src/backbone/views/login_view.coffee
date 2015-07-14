@@ -2,6 +2,7 @@ window.BlueCarbon ||= {}
 window.BlueCarbon.Views ||= {}
 
 ENTER_KEY = 13
+OFFLINE_ERROR_MSG = 'You are currently offline, please connect to the internet to login'
 
 class BlueCarbon.Views.LoginView extends Backbone.View
   template: JST['area/login']
@@ -12,15 +13,15 @@ class BlueCarbon.Views.LoginView extends Backbone.View
     "keydown #username": "login"
 
   login: (event) =>
-    return if event.type is "keydown" and  event.which isnt ENTER_KEY
+    return if event.type is "keydown" and event.which isnt ENTER_KEY
 
     if navigator.connection.type == Connection.NONE
-      alert("You are currently offline, please connect to the internet to login")
+      alert(OFFLINE_ERROR_MSG)
       return false
 
     $('#login-form .loading-spinner').show()
 
-    @model.login(
+    @model.get_or_login(
       $('#login-form').serializeObject(),
       success: (data) =>
         @model.trigger('user:loggedIn', @model)

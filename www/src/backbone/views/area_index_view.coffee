@@ -10,7 +10,6 @@ class BlueCarbon.Views.AreaIndexView extends Backbone.View
 
   initialize: (options) ->
     @map = options.map
-    @offlineLayer = options.offlineLayer
     @areaList = new BlueCarbon.Collections.Areas()
     @areaList.on('reset', @render)
     @sync()
@@ -21,7 +20,7 @@ class BlueCarbon.Views.AreaIndexView extends Backbone.View
     @$el.html(@template(models:@areaList.toJSON()))
     @closeSubViews()
     @areaList.each (area)=>
-      areaView = new BlueCarbon.Views.AreaView(area:area, map: @map, offlineLayer: @offlineLayer)
+      areaView = new BlueCarbon.Views.AreaView(area:area, map: @map)
       $('#area-list').append(areaView.render().el)
       @subViews.push areaView
     return @
@@ -65,8 +64,6 @@ class BlueCarbon.Views.AreaView extends Backbone.View
 
   initialize: (options)->
     @area = options.area
-    @offlineLayer = options.offlineLayer
-
     @area.on('sync', @render)
     @area.on('change:downloadingTiles', @render)
 
@@ -96,7 +93,7 @@ class BlueCarbon.Views.AreaView extends Backbone.View
     BlueCarbon.bus.trigger('area:startTrip', area: @area)
 
   downloadData: =>
-    service = new DownloadService(@area, @offlineLayer)
+    service = new DownloadService(@area, BlueCarbon.map.offlineLayer)
     service.onPercentageChange = @updateProgressBar
 
     @area.set('downloadingTiles', true)

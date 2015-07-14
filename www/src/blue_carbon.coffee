@@ -42,7 +42,7 @@ class BlueCarbon.App
           )
       )
 
-      new Map('map', {bounds: user.bounds()})
+      BlueCarbon.map = new Map('map', {bounds: user.bounds()})
     )
 
     # Setup ajax calls to use auth tokens
@@ -73,7 +73,7 @@ class BlueCarbon.App
     window.BlueCarbon.SQLiteDb = window.sqlitePlugin.openDatabase(name:"BlueCarbon.db")
 
     @addBlurListener()
-    @controller = new BlueCarbon.Controller(app:@, offlineLayer: null)
+    @controller = new BlueCarbon.Controller(app:@)
 
   addBlurListener: ->
     $('body').on('blur', 'input, textarea', ->

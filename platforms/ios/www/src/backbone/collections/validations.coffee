@@ -34,7 +34,8 @@ class BlueCarbon.Collections.Validations extends Backbone.SyncableCollection
 
     # Method to collect validation save states
     onValidationPushed = (validation, state, validationErrors) ->
-      return if !successCallback? and !errorCallback? # No point recording if there are no callbacks
+      # No point recording if there are no callbacks
+      return if !successCallback? and !errorCallback?
 
       if state == 'success'
         successes.push(validation)

@@ -833,13 +833,13 @@
         };
         return q;
     };
-    
+
     async.priorityQueue = function (worker, concurrency) {
-        
+
         function _compareTasks(a, b){
           return a.priority - b.priority;
         };
-        
+
         function _binarySearch(sequence, item, compare) {
           var beg = -1,
               end = sequence.length - 1;
@@ -853,7 +853,7 @@
           }
           return beg;
         }
-        
+
         function _insert(q, data, priority, callback) {
           if (!q.started){
             q.started = true;
@@ -875,7 +875,7 @@
                   priority: priority,
                   callback: typeof callback === 'function' ? callback : null
               };
-              
+
               q.tasks.splice(_binarySearch(q.tasks, item, _compareTasks) + 1, 0, item);
 
               if (q.saturated && q.tasks.length === q.concurrency) {
@@ -884,15 +884,15 @@
               async.setImmediate(q.process);
           });
         }
-        
+
         // Start with a normal queue
         var q = async.queue(worker, concurrency);
-        
+
         // Override push to accept second parameter representing priority
         q.push = function (data, priority, callback) {
           _insert(q, data, priority, callback);
         };
-        
+
         // Remove unshift function
         delete q.unshift;
 
@@ -1681,7 +1681,7 @@ process.chdir = function (dir) {
 
       var hasSuccess = false,
           result = null;
-      
+
       var getTransaction = this.db.transaction([this.storeName], this.consts.READ_ONLY);
       getTransaction.oncomplete = function () {
         var callback = hasSuccess ? onSuccess : onError;
@@ -1759,7 +1759,7 @@ process.chdir = function (dir) {
       };
       batchTransaction.onabort = onError;
       batchTransaction.onerror = onError;
-      
+
       var count = dataArray.length;
       var called = false;
       var hasSuccess = false;

@@ -28,8 +28,8 @@ window.Map = class Map
       onReady: ( => @addBaseLayer(offlineLayer) ),
       onError: ( -> )
 
-    offlineLayer = new OfflineLayer(tileLayerUrl, options)
+    @offlineLayer = new OfflineLayer(tileLayerUrl, options)
 
   addBaseLayer: (offlineLayer) ->
-    offlineLayer.addTo(@map)
+    @offlineLayer.addTo(@map)
     BlueCarbon.bus.trigger('mapReady', offlineLayer)

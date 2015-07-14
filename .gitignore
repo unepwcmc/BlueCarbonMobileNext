@@ -32,7 +32,7 @@ build/*
 xcuserdata
 profile
 *.moved-aside
-ios/www/
+platforms/ios/www/
 
 npm-debug.log
 console.log

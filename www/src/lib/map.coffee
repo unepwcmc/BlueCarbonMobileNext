@@ -25,11 +25,8 @@ window.Map = class Map
       subDomains: ['otile1','otile2','otile3','otile4'],
       storeName: 'offlineTileStore',
       dbOption: 'WebSQL',
-      onReady: ( => @addBaseLayer(offlineLayer) ),
+      onReady: ( => @offlineLayer.addTo(@map) ),
       onError: ( -> )
 
     @offlineLayer = new OfflineLayer(tileLayerUrl, options)
 
-  addBaseLayer: (offlineLayer) ->
-    @offlineLayer.addTo(@map)
-    BlueCarbon.bus.trigger('mapReady', offlineLayer)

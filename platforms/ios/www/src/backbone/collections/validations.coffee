@@ -6,7 +6,7 @@ class BlueCarbon.Collections.Validations extends Backbone.SyncableCollection
   initialize: (models, options) ->
     @area = options.area
     super
-  
+
   doSqliteSync: (method, collection, options) =>
     sql = ""
     switch method
@@ -17,7 +17,7 @@ class BlueCarbon.Collections.Validations extends Backbone.SyncableCollection
             FROM #{collection.model::constructor.name}
             WHERE area_id="#{collection.area.get('id')}";
           """
-     
+
     BlueCarbon.SQLiteDb.transaction(
       (tx) =>
         tx.executeSql(sql, [], (tx, results) =>
@@ -46,7 +46,7 @@ class BlueCarbon.Collections.Validations extends Backbone.SyncableCollection
           errorCallback(errors) if errorCallback?
         else
           successCallback(successes) if successCallback?
-      
+
     @each (validation) ->
       validation.save({},
         success: ->

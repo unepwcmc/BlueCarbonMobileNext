@@ -20,15 +20,10 @@ class BlueCarbon.App
   _.extend @::, Backbone.Events
 
   # Application Constructor
-  constructor: (options)->
-
-    @on('mapReady', (offlineLayer) =>
-      @controller = new BlueCarbon.Controller(app:@, offlineLayer: offlineLayer)
-    )
-
+  constructor: (options) ->
     # Show logged in details
     BlueCarbon.bus.on('user:loggedIn', (user) =>
-      $("#user-area").html("""
+      $('#user-area').html("""
         #{user.get('email')} <a id="logout-user" class="btn btn-small">Log Out</a>
       """)
 
@@ -37,14 +32,17 @@ class BlueCarbon.App
           alert('You cannot logout while offline, please go online before switching user')
           return false
 
-        r=confirm("Are you sure you wish to logout?")
-        if (r==true)
+        r = confirm('Are you sure you wish to logout?')
+        if (r == true)
           user.logout(
             success: =>
-              $("#user-area").html('')
+              $('#map').html('')
+              $('#user-area').html('')
               @controller.transitionToAction(@controller.loginUser)
           )
       )
+
+      new Map('map', {bounds: user.bounds()})
     )
 
     # Setup ajax calls to use auth tokens
@@ -72,42 +70,13 @@ class BlueCarbon.App
 
   start: =>
     StatusBar.hide()
-
     window.BlueCarbon.SQLiteDb = window.sqlitePlugin.openDatabase(name:"BlueCarbon.db")
 
-    @map = new L.Map("map",
-      center: new L.LatLng(24.2870, 54.3274)
-      zoom: 10
-      doubleClickZoom: false
-      attributionControl: false
-    )
-
-    @createBaseLayer()
-    @addControls()
     @addBlurListener()
+    @controller = new BlueCarbon.Controller(app:@, offlineLayer: null)
 
   addBlurListener: ->
     $('body').on('blur', 'input, textarea', ->
       $(window).scrollTop(0)
     )
 
-  addControls: (offlineLayer) ->
-    @map.addControl(new L.Control.ShowLocation())
-    L.control.scale().addTo(@map)
-
-  createBaseLayer: ->
-    tileLayerUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-
-    options =
-      maxZoom: 18,
-      subDomains: ['otile1','otile2','otile3','otile4'],
-      storeName:"offlineTileStore",
-      dbOption:"WebSQL",
-      onReady: ( => @addBaseLayer(offlineLayer) ),
-      onError: ->
-
-    offlineLayer = new OfflineLayer(tileLayerUrl, options)
-
-  addBaseLayer: (offlineLayer) ->
-    offlineLayer.addTo(@map)
-    @trigger('mapReady', offlineLayer)

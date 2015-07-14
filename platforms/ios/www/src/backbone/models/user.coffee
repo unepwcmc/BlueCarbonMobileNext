@@ -18,7 +18,7 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
         options.error(data)
     )
 
-  get_profile: (success, error) =>
+  get_profile: (success, error) ->
     $.ajax(
       type: 'GET'
       url: 'http://mozambique.blueforests.dev/users/me.json'
@@ -48,6 +48,7 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
       BlueCarbon.bus.trigger('user:loggedIn', @)
       @localSave({}, success: success)
 
+  bounds: => JSON.parse(@get('bounds'))
 
   logout: (options) ->
     @localDestroy(

@@ -29,24 +29,26 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
   login: (form, success, error) =>
     $.ajax(
       type: 'POST'
-      url: 'http://bluecarbon.unep-wcmc.org/my/admins/sign_in.json'
-      data: { admin: { email: form.email password: form.password } }
+      url: 'http://mozambique.blueforests.dev/my/users/sign_in.json'
+      data: { user: { email: form.email, password: form.password } }
       dataType: 'json'
-      success: @handle_login_with(form, success)
+      success: (data) =>
+        @set('auth_token', data.auth_token)
+        BlueCarbon.bus.trigger('user:gotAuthToken', data.auth_token)
+
+        @get_profile(@save_profile_with(success), error)
       error: error
     )
 
-  handle_login_with: (form, success) =>
+  save_profile_with: (success) =>
     (data) =>
-      @set('email', form.email)
-      @set('auth_token', data.auth_token)
+      @set('email', data.email)
+      @set('bounds', JSON.stringify(data.country.bounds))
 
-      @localSave({}, success: (a,b,c) =>
-        success(@)
-        BlueCarbon.bus.trigger('user:gotAuthToken', data.auth_token)
-        BlueCarbon.bus.trigger('user:loggedIn', @)
-      )
+      BlueCarbon.bus.trigger('user:loggedIn', @)
+      @localSave({}, success: success)
 
+  bounds: => JSON.parse(@get('bounds'))
 
   logout: (options) ->
     @localDestroy(

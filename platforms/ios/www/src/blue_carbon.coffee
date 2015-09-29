@@ -96,13 +96,12 @@ class BlueCarbon.App
     L.control.scale().addTo(@map)
 
   createBaseLayer: ->
-    tileLayerUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+    tileLayerUrl = 'https://api.mapbox.com/v4/unepwcmc.d8952968/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidW5lcHdjbWMiLCJhIjoiRXg1RERWRSJ9.taTsSWwtAfFX_HMVGo2Cug'
 
     options =
-      maxZoom: 18,
-      subDomains: ['otile1','otile2','otile3','otile4'],
-      storeName:"offlineTileStore",
-      dbOption:"WebSQL",
+      maxZoom: 17,
+      storeName: "offlineTileStore",
+      dbOption: "WebSQL",
       onReady: ( => @addBaseLayer(offlineLayer) ),
       onError: ->
 

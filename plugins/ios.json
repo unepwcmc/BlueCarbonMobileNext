@@ -84,6 +84,12 @@
                             "xml": "<string />",
                             "count": 1
                         }
+                    ],
+                    "NSAppTransportSecurity": [
+                        {
+                            "xml": "<dict><key>NSAllowsArbitraryLoads</key><true /></dict>",
+                            "count": 1
+                        }
                     ]
                 }
             }
@@ -107,6 +113,9 @@
         },
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
+        },
+        "sk.kcorp.cordova.ios-security": {
+            "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
         }
     },
     "dependent_plugins": {}

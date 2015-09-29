@@ -50,6 +50,7 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <preference name="Orientation" value="landscape" />
     <gap:config-file overwrite="true" parent="UIViewControllerBasedStatusBarAppearance" platform="ios">
         <false />
     </gap:config-file>

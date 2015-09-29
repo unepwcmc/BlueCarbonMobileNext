@@ -226,7 +226,8 @@ module.exports.metadata =
     "org.apache.cordova.network-information": "0.2.14",
     "org.apache.cordova.geolocation": "0.3.11",
     "org.apache.cordova.file-transfer": "0.4.8",
-    "org.apache.cordova.statusbar": "0.1.9"
+    "org.apache.cordova.statusbar": "0.1.9",
+    "sk.kcorp.cordova.ios-security": "0.3.0"
 }
 // BOTTOM OF METADATA
 });

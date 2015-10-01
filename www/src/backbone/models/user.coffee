@@ -5,13 +5,13 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
   schema: ->
     "sqlite_id INTEGER PRIMARY KEY, id INTEGER, auth_token TEXT, email TEXT"
 
-  # Takes success and error callback options, tries 
+  # Takes success and error callback options, tries
   # to login with model attributes
   login: (form, options) ->
     # Test for existing login
     $.ajax(
       type: 'GET'
-      url: 'http://bluecarbon.unep-wcmc.org/admins/me.json'
+      url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/admins/me.json'
       success: options.success
       error: (data)=>
         @set('email', form.email)
@@ -19,7 +19,7 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
           # Not logged in, login
           $.ajax(
             type: 'POST'
-            url: 'http://bluecarbon.unep-wcmc.org/my/admins/sign_in.json'
+            url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/my/admins/sign_in.json'
             data:
               admin:
                 email: form.email

@@ -154,18 +154,17 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/org.apache.cordova.network-information/www/network.js",
-        "id": "org.apache.cordova.network-information.network",
+        "file": "plugins/org.apache.cordova.file-transfer/www/FileTransferError.js",
+        "id": "org.apache.cordova.file-transfer.FileTransferError",
         "clobbers": [
-            "navigator.connection",
-            "navigator.network.connection"
+            "window.FileTransferError"
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.network-information/www/Connection.js",
-        "id": "org.apache.cordova.network-information.Connection",
+        "file": "plugins/org.apache.cordova.file-transfer/www/FileTransfer.js",
+        "id": "org.apache.cordova.file-transfer.FileTransfer",
         "clobbers": [
-            "Connection"
+            "window.FileTransfer"
         ]
     },
     {
@@ -197,17 +196,18 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.file-transfer/www/FileTransferError.js",
-        "id": "org.apache.cordova.file-transfer.FileTransferError",
+        "file": "plugins/org.apache.cordova.network-information/www/network.js",
+        "id": "org.apache.cordova.network-information.network",
         "clobbers": [
-            "window.FileTransferError"
+            "navigator.connection",
+            "navigator.network.connection"
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.file-transfer/www/FileTransfer.js",
-        "id": "org.apache.cordova.file-transfer.FileTransfer",
+        "file": "plugins/org.apache.cordova.network-information/www/Connection.js",
+        "id": "org.apache.cordova.network-information.Connection",
         "clobbers": [
-            "window.FileTransfer"
+            "Connection"
         ]
     },
     {
@@ -223,9 +223,9 @@ module.exports.metadata =
 {
     "com.brodysoft.sqlitePlugin": "1.0.3",
     "org.apache.cordova.file": "1.3.2",
-    "org.apache.cordova.network-information": "0.2.14",
-    "org.apache.cordova.geolocation": "0.3.11",
     "org.apache.cordova.file-transfer": "0.4.8",
+    "org.apache.cordova.geolocation": "0.3.11",
+    "org.apache.cordova.network-information": "0.2.14",
     "org.apache.cordova.statusbar": "0.1.9",
     "sk.kcorp.cordova.ios-security": "0.3.0"
 }

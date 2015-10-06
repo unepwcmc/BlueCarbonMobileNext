@@ -9,31 +9,33 @@
                 "parents": {
                     "libsqlite3.dylib": [
                         {
-                            "xml": "false",
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libz.dylib": [],
+                    "CFNetwork.framework": [],
+                    "SystemConfiguration.framework": [
+                        {
+                            "xml": true,
+                            "count": 1
+                        }
+                    ],
+                    "MobileCoreServices.framework": [
+                        {
+                            "xml": false,
                             "count": 1
                         }
                     ],
                     "AssetsLibrary.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 2
-                        }
-                    ],
-                    "MobileCoreServices.framework": [
-                        {
-                            "xml": "false",
-                            "count": 1
-                        }
-                    ],
-                    "SystemConfiguration.framework": [
-                        {
-                            "xml": "true",
-                            "count": 1
                         }
                     ],
                     "CoreLocation.framework": [
                         {
-                            "xml": "false",
+                            "xml": false,
                             "count": 1
                         }
                     ]
@@ -51,7 +53,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
+                            "xml": "<feature name=\"FileTransfer\"><param name=\"ios-package\" value=\"CDVFileTransfer\" /></feature>",
                             "count": 1
                         },
                         {
@@ -59,7 +61,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"FileTransfer\"><param name=\"ios-package\" value=\"CDVFileTransfer\" /></feature>",
+                            "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
                             "count": 1
                         },
                         {
@@ -102,20 +104,20 @@
         "org.apache.cordova.file": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         },
-        "org.apache.cordova.network-information": {
+        "org.apache.cordova.file-transfer": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         },
         "org.apache.cordova.geolocation": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         },
-        "org.apache.cordova.file-transfer": {
+        "org.apache.cordova.network-information": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         },
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         },
         "sk.kcorp.cordova.ios-security": {
-            "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+            "PACKAGE_NAME": "com.unepwcmc.blueCarbonMobile"
         }
     },
     "dependent_plugins": {}

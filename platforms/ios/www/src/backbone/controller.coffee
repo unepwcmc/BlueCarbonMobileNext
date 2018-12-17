@@ -1,5 +1,6 @@
 class BlueCarbon.Controller extends Wcmc.Controller
   constructor: (options)->
+    super(options)
     @app = options.app
     @offlineLayer = options.offlineLayer
     @sidePanel = new Backbone.ViewManager('#side-panel-content-container')

@@ -5,11 +5,15 @@ layer, off- or on-line.
 
 # Development
 
+Pre-req is xcode, install from appStore then run:
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+to make it find the right command line tools otherwise node-gyp install will fail
+
 The main app is a web application, which lives inside the www/ folder.
 As we use Coffeescript and Sass, `gulp` is used for compilation. Run:
 
     npm install
-    gulp
+    ./node_modules/.bin/gulp
 
 This will compile the source and assets, and watch them for further
 changes.
@@ -19,6 +23,10 @@ The app is run using the Cordova command line tool:
     npm install -g cordova
     # cordova emulate ios --target="<device>"
     cordova emulate ios --target="iPad-Air"
+
+If you have a new version of xcode, you may need to add
+--buildFlag='-UseModernBuildSystem=0'
+to the cordova commandline 
 
 # Debugging
 

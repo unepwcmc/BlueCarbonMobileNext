@@ -11,21 +11,21 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
     # Test for existing login
     $.ajax(
       type: 'GET'
-      url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/admins/me.json'
+      url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/admins/me.json'
       success: options.success
       error: (data)=>
         @set('email', form.email)
         if data.error?
           # Not logged in, login
           $.ajax(
-            type: 'POST'
-            url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/my/admins/sign_in.json'
-            data:
+            type: 'POST'
+            url: 'http://bluecarbon.unepwcmc-012.vm.brightbox.net/my/admins/sign_in.json'
+            data:
               admin:
                 email: form.email
                 password: form.password
-            dataType: "json"
-            success: (data) =>
+            dataType: "json"
+            success: (data) =>
               @set('auth_token', data.auth_token)
 
               @localSave({},
@@ -35,7 +35,7 @@ class BlueCarbon.Models.User extends Backbone.SyncableModel
                   BlueCarbon.bus.trigger('user:loggedIn', @)
               )
 
-            error: options.error
+            error: options.error
           )
         else
           options.error(data)

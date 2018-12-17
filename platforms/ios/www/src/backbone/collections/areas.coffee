@@ -46,4 +46,4 @@ class BlueCarbon.Collections.Areas extends Backbone.SyncableCollection
               break
 
 
-    super
+

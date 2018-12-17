@@ -4,8 +4,9 @@ window.BlueCarbon.Collections ||= {}
 class BlueCarbon.Collections.Validations extends Backbone.SyncableCollection
   model: BlueCarbon.Models.Validation
   initialize: (models, options) ->
+    super()
     @area = options.area
-    super
+
   
   doSqliteSync: (method, collection, options) =>
     sql = ""

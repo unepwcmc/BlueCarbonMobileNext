@@ -1,12 +1,52 @@
 {
-  "name": "blue-carbon",
+  "name": "bluecarbonmobilenext",
+  "version": "1.0.0",
+  "description": "Unknown",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "cordova-android": "^7.1.4",
+    "cordova-ios": "^4.5.5",
+    "cordova-plugin-file": "^6.0.1",
+    "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-geolocation": "^4.0.1",
+    "cordova-plugin-network-information": "^2.0.1",
+    "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-sqlite-ext": "2.2.0"
+  },
   "devDependencies": {
-    "gulp-coffee": "~1.4.1",
-    "gulp-concat": "~2.1.7",
-    "gulp-uglify": "~0.2.1",
-    "gulp-declare": "~0.1.0",
-    "gulp-plumber": "~0.5.6",
-    "gulp-sass": "^0.7.1",
-    "gulp": ""
+    "gulp": "^3.9.1",
+    "gulp-coffee": "^3.0.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-declare": "^0.3.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-sass": "^3.2.1",
+    "gulp-uglify": "^3.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unepwcmc/BlueCarbonMobileNext.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unepwcmc/BlueCarbonMobileNext/issues"
+  },
+  "homepage": "https://github.com/unepwcmc/BlueCarbonMobileNext#readme",
+  "cordova": {
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "plugins": {
+      "cordova-sqlite-ext": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-geolocation": {}
+    }
   }
 }

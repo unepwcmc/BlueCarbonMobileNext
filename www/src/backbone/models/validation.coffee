@@ -11,7 +11,7 @@ class BlueCarbon.Models.Validation extends Backbone.SyncableModel
     return "#{ @get('habitat') } - #{@get('action') } ( #{@get('recorded_at').replace(/-/g, '/')})"
 
   toJSON: (forRails = true)->
-    json = super
+    json = super()
     if forRails
       return {
         validation: json

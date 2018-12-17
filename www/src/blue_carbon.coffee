@@ -73,7 +73,7 @@ class BlueCarbon.App
   start: =>
     StatusBar.hide()
 
-    window.BlueCarbon.SQLiteDb = window.sqlitePlugin.openDatabase(name:"BlueCarbon.db")
+    window.BlueCarbon.SQLiteDb = window.sqlitePlugin.openDatabase(name:"BlueCarbon.db", iosDatabaseLocation: "Documents")
 
     @map = new L.Map("map",
       center: new L.LatLng(24.2870, 54.3274)
